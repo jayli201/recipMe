@@ -1,19 +1,134 @@
-# ---------------------------------- RECIPES TABLE ----------------------------------
+# ---------------------------------- CREATING ALL TABLES ----------------------------------
 
-# Create table: recipes
+# ---------------------------------- recipes ----------------------------------
+
 CREATE TABLE IF NOT EXISTS recipes (
     recipeID int AUTO_INCREMENT,
-    username varchar(40) NOT NULL,
+    username varchar(40),
     recipeName varchar(40) NOT NULL,
     instructions varchar(255) UNIQUE NOT NULL,
     instructionCount int NOT NULL,
     country varchar(40) NOT NULL,
     cookingTime int NOT NULL,
     recipePinCount int NOT NULL,
-    primary key(recipeID)
+    primary key(recipeID, username)
 );
 
-# ---------------------------------- RECIPES CONSTRAINTS ----------------------------------
+# ---------------------------------- instructions ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS instructions (
+    recipeID int,
+    username varchar(40), 
+    instructions varchar(255),
+    difficulty varchar(10	),
+    primary key(recipeID, username)
+);
+
+# ---------------------------------- recipePinCount ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS recipePinCount (
+    recipeID int,
+    username varchar(40), 
+    recipePinCount int,
+    popularity varchar(40),
+    primary key(recipeID, username)
+);
+
+# ---------------------------------- ingredients ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS ingredients (
+    recipeID int,
+    username varchar(40), 
+    ingredient varchar(40),
+    primary key(recipeID, username, ingredient)
+);
+
+# ---------------------------------- categories ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS categories (
+    recipeID int,
+    username varchar(40), 
+    category varchar(40),
+    primary key(recipeID, username, category)
+);
+
+# ---------------------------------- allergens ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS allergens (
+    recipeID int,
+    username varchar(40), 
+    allergen varchar(40),
+    primary key(recipeID, username, allergen)
+);
+
+# ---------------------------------- reviews ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS reviews (
+    recipeID int,
+    username varchar(40), 
+    reviews varchar(255),
+    primary key(recipeID, username, reviews)
+);
+
+# ---------------------------------- dietaryRestrictions ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS dietaryRestrictions (
+    recipeID int,
+    username varchar(40), 
+    restriction varchar(255),
+    primary key(recipeID, username, restriction)
+);
+
+# ---------------------------------- pin ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS pin (
+    recipeID int,
+    cookUsername varchar(40),
+    username varchar(40),
+    attempted BIT NOT NULL,
+    primary key(recipeID, cookUsername, username)
+);
+
+# ---------------------------------- users ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS users (
+    username varchar(40),
+    email varchar(40) NOT NULL,
+    password varchar(40) NOT NULL,
+    firstName varchar(40) NOT NULL,
+    lastName varchar(40) NOT NULL,
+    isCook BIT NOT NULL,
+    primary key(username)
+);
+
+# ---------------------------------- foodies ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS foodies (
+    username varchar(40),
+    favoriteFood varchar(40) NOT NULL,
+    primary key(username)
+);
+
+# ---------------------------------- cookPinCount ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS cookPinCount(
+    username varchar(40),
+    cookPinCount int NOT NULL,
+    expertise varchar(40),
+    primary key(username)
+);
+
+# ---------------------------------- areasOfExperience ---------------------------------- 
+
+CREATE TABLE IF NOT EXISTS areasOfExperience (
+    username varchar(40),
+    area varchar(40),
+    primary key(username, area)
+);
+
+# ---------------------------------- ADVANCED SQL COMMANDS ----------------------------------
+
+# ---------------------------------- recipes constraints ----------------------------------
 
 # Create constraint: instruction count should always be greater than 0
 ALTER TABLE recipes
@@ -30,39 +145,29 @@ ALTER TABLE recipes
 ADD CONSTRAINT checkRecipePinCount
 CHECK (recipePinCount > 0);
 
-/*
-# Create stored procedure: updateCookExpertise
-DELIMITER $$
-CREATE PROCEDURE updateCookExpertise(cook VARCHAR(40))
-BEGIN
-	DECLARE pins INT;
-	SELECT cookPinCount INTO pins FROM cookPinCount WHERE username = cook;
-  	IF pins BETWEEN 0 AND 10
-	THEN
-		UPDATE cookPinCount SET expertise = "amateur cook" WHERE recipeID = recipe;
-	ELSEIF pins BETWEEN 10 AND 20
-	THEN
-		UPDATE cookPinCount SET expertise = "home cook" WHERE recipeID = recipe;
-	ELSEIF pins > 20
-	THEN
-		UPDATE cookPinCount SET expertise = "expert cook" WHERE recipeID = recipe;
-	END IF;
-END
-$$
-DELIMITER ;
-*/
+# ----------------------------------  cookPinCount constraint ---------------------------------- 
 
-# ---------------------------------- AFTER INSERT ON RECIPES ----------------------------------
+# Create constraint: cook pin count is always greater than or equal to 0 (never negative)
+ALTER TABLE cookPinCount
+ADD CONSTRAINT checkCookPinCount
+CHECK (cookPinCount >= 0);
 
-# Create trigger: instructionDifficulty
-# When a cook submits a recipe, we determine the recipe difficulty and insert the difficulty into the “instructions” table.
+# ---------------------------------- after insert on recipes triggers ----------------------------------
+
+# After inserting a recipe, these tables need to be updated:
+# 1. instructions (difficulty)
+# 2. recipePinCount (number of pins and popularity)
+# 3. cookPinCount (number of pins and expertise)
+# 4. pin (a cook pins their own submitted recipe)
+
+# Create trigger: instructionDifficultyTrigger
+# Determine the instruction difficulty through predefined ranges for “easy”, “medium”, and “hard” recipes.
 DELIMITER $$
-CREATE TRIGGER instructionDifficulty
+CREATE TRIGGER instructionDifficultyTrigger
 AFTER INSERT ON recipes
 FOR EACH ROW
 BEGIN
-	INSERT INTO instructions SET recipeID = NEW.recipeID;
-	UPDATE instructions SET instructions = NEW.instructions WHERE recipeID = NEW.recipeID;
+	INSERT INTO instructions (recipeID, username, instructions) VALUES (NEW.recipeID, NEW.username, NEW.instructions);
     	IF NEW.instructionCount BETWEEN 0 AND 5
 	THEN
 		UPDATE instructions SET difficulty = "easy" WHERE instructions = NEW.instructions;
@@ -75,20 +180,28 @@ BEGIN
 	END IF;
 END
 $$
-DELIMITER ;
 
-# Create trigger: insertRecipePopularityTrigger
-# When a cook submits a recipe, it is automatically pinned by the cook so we have to update the recipe popularity and his cookPinCount. We insert a recipePinCount and cookPinCount of 1 once the cook submits the recipe. A pin count of 1 means that the recipe is “up and coming”.
+# Create trigger: insertRecipePinCountTrigger
+# When a cook submits a recipe, it is automatically pinned by the cook. We insert a recipePinCount 1 once the cook submits the recipe. A recipePinCount of 1 means that the recipe is “up and coming”.
 DELIMITER $$
-CREATE TRIGGER insertRecipePopularityTrigger
+CREATE TRIGGER insertRecipePinCountTrigger
 AFTER INSERT ON recipes
 FOR EACH ROW
 BEGIN
-	INSERT INTO recipePinCount SET recipeID = NEW.recipeID;
-	UPDATE recipePinCount SET recipePinCount = NEW.recipePinCount WHERE recipeID = NEW.recipeID;
-    	UPDATE recipePinCount SET popularity = "up and coming" WHERE recipeID = NEW.recipeID;
+	INSERT INTO recipePinCount VALUES (NEW.recipeID, NEW.username, 1, "up and coming");
+END
+$$
+DELIMITER ;
+
+# Create trigger: updateCookPinCountTrigger
+# We increment the cookPinCount by 1 since a cook always pin his own submitted recipe. Then we call the stored procedure updateCookExpertise in case the expertise needs to be updated.
+DELIMITER $$
+CREATE TRIGGER updateCookPinCountTrigger
+AFTER INSERT ON recipes
+FOR EACH ROW
+BEGIN
 	UPDATE cookPinCount SET cookPinCount = cookPinCount + 1 WHERE username = NEW.username;
-	# CALL updateCookExpertise(NEW.username);
+	CALL updateCookExpertise(NEW.username);
 END
 $$
 DELIMITER ;
@@ -100,17 +213,26 @@ CREATE TRIGGER insertPinTrigger
 AFTER INSERT ON recipes
 FOR EACH ROW
 BEGIN
-	INSERT INTO pin SET recipeID = NEW.recipeID;
-	UPDATE pin SET username = NEW.username WHERE recipeID = NEW.recipeID;
-	UPDATE pin SET attempted = 1;
+	INSERT INTO pin VALUES (NEW.recipeID, NEW.username, NEW.username, 1);
 END
 $$
 DELIMITER ;
 
-# ---------------------------------- BEFORE DELETE ON RECIPES ----------------------------------
+# ---------------------------------- before delete on recipes trigger ----------------------------------
+
+# When a recipe is deleted, the related rows in the following tables must be deleted/updated:
+# 1. instructions
+# 2. recipePinCount
+# 3. ingredients
+# 4. categories
+# 5. allergens
+# 6. reviews
+# 7. dietaryRestrictions
+# 8. pin
+# 9. cookPinCount (number of pins and expertise)
+# We also use the stored procedure updateCookExpertise to update the cook’s expertise if needed. 
 
 # Create trigger: deleteRecipeTrigger
-# When a cook deletes a recipe, all related recipe entries in other tables must be deleted. The cookPinCount and expertise need to be updated.
 DELIMITER $$
 CREATE TRIGGER deleteRecipeTrigger
 BEFORE DELETE ON recipes
@@ -129,200 +251,126 @@ DELETE FROM pin WHERE recipeID = OLD.recipeID;
 IF pins > 0
 THEN
 UPDATE cookPinCount SET cookPinCount = cookPinCount - OLD.recipePinCount WHERE username = OLD.username;
-# CALL updateCookPinCount(OLD.username);
+CALL updateCookExpertise(OLD.username);
 	END IF;
 END
 $$
 DELIMITER ;
 
-# ---------------------------------- INSTRUCTIONS TABLE ---------------------------------- 
+# ---------------------------- after insert on pin triggers and stored procedures ---------------------------- 
 
-# Create table: instructions
-CREATE TABLE IF NOT EXISTS instructions (
-    recipeID int,
-    instructions varchar(255),
-    difficulty varchar(10	),
-    primary key(recipeID)
-);
+# After a user pins a recipe, the following tables need to be updated:
+# 1. recipePinCount (the number of pins and the popularity)
+# 2. cookPinCount (the number of pins and the expertise)
+# 3. recipes (recipePinCount)
 
-# ---------------------------------- RECIPEPINCOUNT TABLE ---------------------------------- 
-
-# Create table: recipePinCount
-CREATE TABLE IF NOT EXISTS recipePinCount (
-    recipeID int,
-    recipePinCount int,
-    popularity varchar(40),
-    primary key(recipeID)
-);
-
-/*
-# Create trigger: updateRecipePopularityTrigger
+# Create trigger: pinTrigger
 DELIMITER $$
-CREATE TRIGGER updateRecipePopularityTrigger
-BEFORE INSERT ON pin
-FOR EACH ROW
-BEGIN
-	UPDATE recipePinCount SET recipePinCount = recipePinCount + 1;
-    	IF NEW.recipePinCount + 1 BETWEEN 0 AND 5
-	THEN
-		UPDATE recipePinCount SET popularity = "up and coming" WHERE recipePinCount = NEW.recipePinCount;
-	ELSEIF NEW.recipePinCount + 1 BETWEEN 5 AND 15
-	THEN
-		UPDATE recipePinCount SET popularity = "rising star" WHERE recipePinCount = NEW.recipePinCount;
-	ELSEIF NEW.recipePinCount + 1 > 15
-	THEN
-		UPDATE recipePinCount SET popularity = "big hit" WHERE recipePinCount = NEW.recipePinCount;
-	END IF;
-END
-$$
-DELIMITER ;
-*/
-
-# ---------------------------------- INGREDIENTS TABLE ---------------------------------- 
-
-# Create table: ingredients
-CREATE TABLE IF NOT EXISTS ingredients (
-    recipeID int,
-    ingredient varchar(40),
-    primary key(recipeID, ingredient)
-);
-
-# ---------------------------------- CATEGORIES TABLE ---------------------------------- 
-
-# Create table: categories
-CREATE TABLE IF NOT EXISTS categories (
-    recipeID int,
-    category varchar(40),
-    primary key(recipeID, category)
-);
-
-# ---------------------------------- ALLERGENS TABLE ---------------------------------- 
-
-# Create table: allergens
-CREATE TABLE IF NOT EXISTS allergens (
-    recipeID int,
-    allergen varchar(40),
-    primary key(recipeID, allergen)
-);
-
-# ---------------------------------- REVIEWS TABLE ---------------------------------- 
-
-# Create table: reviews
-CREATE TABLE IF NOT EXISTS reviews (
-    recipeID int,
-    reviews varchar(255),
-    primary key(recipeID, reviews)
-);
-
-# ---------------------------------- DIETARYRESTRICTIONS TABLE ---------------------------------- 
-
-# Create table: dietaryRestrictions
-CREATE TABLE IF NOT EXISTS dietaryRestrictions (
-    recipeID int,
-    restriction varchar(255),
-    primary key(recipeID, restriction)
-);
-
-# ---------------------------------- PIN TABLE ---------------------------------- 
-
-# Create table: pin
-CREATE TABLE IF NOT EXISTS pin (
-    recipeID int,
-    username varchar(40),
-    attempted BIT NOT NULL,
-    primary key(recipeID, username)
-);
-
-# ---------------------------------- AFTER INSERT ON PIN ---------------------------------- 
-
-/*
-# Create trigger: updateRecipePinCountTrigger
-# Increment the recipePinCount and cookPinCount after a recipe is pinned.
-DELIMITER $$
-CREATE TRIGGER updateRecipePinCountTrigger
+CREATE TRIGGER pinTrigger
 AFTER INSERT ON pin
 FOR EACH ROW
 BEGIN
-	DECLARE cook varchar(40);
-	SELECT username INTO cook FROM recipes WHERE recipeID = NEW.recipeID;
-	UPDATE recipePinCount SET recipePinCount = recipePinCount + 1 WHERE recipeID = NEW.recipeID;
-	UPDATE cookPinCount SET cookPinCount = cookPinCount + 1 WHERE username = cook;
+	IF NEW.cookUsername <> NEW.username
+	THEN
+		UPDATE cookPinCount SET cookPinCount = cookPinCount + 1 WHERE username = NEW.cookUsername;
+		UPDATE recipePinCount SET recipePinCount = recipePinCount + 1 WHERE recipeID = NEW.recipeID AND username = NEW.cookUsername;
+		UPDATE recipes SET recipePinCount = recipePinCount + 1 WHERE recipeID = NEW.recipeID AND username = NEW.cookUsername;
+	END IF;
+	CALL updateCookExpertise(NEW.cookUsername);
+	CALL updateRecipePopularity(NEW.recipeID, NEW.cookUsername);
 END
 $$
 DELIMITER ;
-*/
 
-# ---------------------------------- USERS TABLE ---------------------------------- 
+# Create stored procedure: updateCookExpertise
+DELIMITER $$
+CREATE PROCEDURE updateCookExpertise(cook VARCHAR(40))
+BEGIN
+	DECLARE pins INT;
+	SELECT cookPinCount INTO pins FROM cookPinCount WHERE username = cook;
+  	IF pins BETWEEN 0 AND 10
+	THEN
+		UPDATE cookPinCount SET expertise = "amateur cook" WHERE username = cook;
+	ELSEIF pins BETWEEN 10 AND 20
+	THEN
+		UPDATE cookPinCount SET expertise = "home cook" WHERE username = cook;
+	ELSEIF pins > 20
+	THEN
+		UPDATE cookPinCount SET expertise = "expert cook" WHERE username = cook;
+	END IF;
+END
+$$
+DELIMITER ;
 
-# Create table: users
-CREATE TABLE IF NOT EXISTS users (
-    username varchar(40),
-    email varchar(40) NOT NULL,
-    password varchar(40) NOT NULL,
-    firstName varchar(40) NOT NULL,
-    lastName varchar(40) NOT NULL,
-    isCook BIT NOT NULL,
-    primary key(username)
-);
+# Create stored procedure: updateRecipePopularity
+DELIMITER $$
+CREATE PROCEDURE updateRecipePopularity(recipe INT, cook VARCHAR(40))
+BEGIN
+DECLARE pins INT;
+SELECT recipePinCount INTO pins FROM recipePinCount WHERE recipeID = recipe AND username = cook;
+    	IF pins BETWEEN 0 AND 5
+	THEN
+		UPDATE recipePinCount SET popularity = "up and coming" WHERE recipeID = recipe AND username = cook;
+	ELSEIF pins BETWEEN 5 AND 15
+	THEN
+		UPDATE recipePinCount SET popularity = "rising star" WHERE recipeID = recipe AND username = cook;
+	ELSEIF pins > 15
+	THEN
+		UPDATE recipePinCount SET popularity = "big hit" WHERE recipeID = recipe AND username = cook;
+	END IF;
+END
+$$
+DELIMITER ;
 
-# ---------------------------------- BEFORE INSERT ON USERS ---------------------------------- 
+# ---------------------------------- before delete on pin trigger ---------------------------------- 
+
+# After a user unpins a recipe, the following tables need to be updated:
+# 1. recipePinCount (the number of pins and the popularity)
+# 2. cookPinCount (the number of pins and the expertise)
+# 3. recipes (recipePinCount)
+# We use two stored procedures to update the recipe’s popularity and cook’s expertise if needed.
+
+# Create trigger: unpinTrigger
+DELIMITER $$
+CREATE TRIGGER unpinTrigger
+BEFORE DELETE ON pin
+FOR EACH ROW
+BEGIN
+	IF OLD.cookUsername <> OLD.username
+	THEN
+		UPDATE cookPinCount SET cookPinCount = cookPinCount - 1 WHERE username = OLD.cookUsername;
+		UPDATE recipePinCount SET recipePinCount = recipePinCount - 1 WHERE recipeID = OLD.recipeID AND username = OLD.cookUsername;
+		UPDATE recipes SET recipePinCount = recipePinCount - 1 WHERE recipeID = OLD.recipeID AND username = OLD.cookUsername;
+	END IF;
+	CALL updateCookExpertise(OLD.cookUsername);
+	CALL updateRecipePopularity(OLD.recipeID, OLD.cookUsername);
+END
+$$
+DELIMITER ;
+
+# ---------------------------------- after insert on users trigger ---------------------------------- 
+
+# When a cook account is created (cooks only, no foodies), we insert a cookPinCount of 0. Then we set the expertise to be “amateur cook”. 
 
 # Create trigger: insertCookExpertiseTrigger
-# When a cook account is created (cooks only, no foodies), we insert a cookPinCount of 0. Then we set the expertise to be “amateur cook”. 
 DELIMITER $$
 CREATE TRIGGER insertCookExpertiseTrigger
-BEFORE INSERT ON users
+AFTER INSERT ON users
 FOR EACH ROW
 BEGIN
 	IF NEW.isCook = 1
 	THEN
-	INSERT INTO cookPinCount SET username = NEW.username;
-	UPDATE cookPinCount SET cookPinCount = 0;
-    	UPDATE cookPinCount SET expertise = "amateur cook" WHERE username = NEW.username;
+		INSERT INTO cookPinCount VALUES (NEW.username, 0, "amateur cook");
 	END IF;
 END
 $$
 DELIMITER ;
 
-# ---------------------------------- FOODIES TABLE ---------------------------------- 
+# ---------------------------------- OTHER SQL COMMANDS ----------------------------------
 
-# Create table: foodies
-CREATE TABLE IF NOT EXISTS foodies (
-    username varchar(40),
-    favoriteFood varchar(40) NOT NULL,
-    primary key(username)
-);
+# ---------------------------------- add users (cooks and foodies) ----------------------------------
 
-# ---------------------------------- COOKPINCOUNT TABLE ---------------------------------- 
-
-# Create table: cookPinCount
-CREATE TABLE IF NOT EXISTS cookPinCount(
-    username varchar(40),
-    cookPinCount int NOT NULL,
-    expertise varchar(40),
-    primary key(username)
-);
-
-# ----------------------------------  COOKPINCOUNT CONSTRAINT ---------------------------------- 
-
-# Create constraint: cook pin count is always greater than or equal to 0 (never negative)
-ALTER TABLE cookPinCount
-ADD CONSTRAINT checkCookPinCount
-CHECK (cookPinCount >= 0);
-
-# ---------------------------------- AREASOFEXPERIENCE TABLE ---------------------------------- 
-
-# Create table: areasOfExperience
-
-CREATE TABLE IF NOT EXISTS areasOfExperience (
-    username varchar(40),
-    area varchar(40),
-    primary key(username, area)
-);
-
-# ---------------------------------- ADD USERS (COOKS AND FOODIES) ----------------------------------
-
-# Add data: users
+# Add data: users (includes both cooks and foodies)
 INSERT INTO users VALUES ('jl6ww', 'jl6ww@virginia.edu', 'Password$' ,'Jay', 'Li', 1);
 INSERT INTO users VALUES ('mds2cf', 'mds2cf@virginia.edu', '123%Pass' ,'Monica', 'Sandoval-Vasquez', 1);
 INSERT INTO users VALUES ('amh2sd', 'amh2sd@virginia.edu', 'abcD!123' , 'Alice', 'Han', 1);
@@ -344,51 +392,89 @@ INSERT INTO foodies VALUES ('monicasandoval', 'tacos');
 INSERT INTO foodies VALUES ('alicehan', 'egg tarts');
 INSERT INTO foodies VALUES ('rebeccazhou', 'fried eggs and tomatoes');
 
-# ---------------------------------- ADD RECIPE1 ----------------------------------
+# ---------------------------------- recipe 1 ----------------------------------
 
-# Add data: recipes
+# Add data: recipes (a trigger is activated after inserting)
 INSERT INTO recipes (username, recipeName, instructions, instructionCount, country, cookingTime, recipePinCount) VALUES ('jl6ww', 'PB&J', "Spread the peanut butter on one piece of bread. Spread the jelly on the same side. Put the two pieces of bread together to form a sandwich.", 3, 'United States', 2, 1);
 
 # Add data: ingredients
-INSERT INTO ingredients VALUES (1, 'peanut butter');
-INSERT INTO ingredients VALUES (1, 'jelly');
-INSERT INTO ingredients VALUES (1, 'bread');
+INSERT INTO ingredients VALUES (1, 'jl6ww', 'peanut butter');
+INSERT INTO ingredients VALUES (1, 'jl6ww',  'jelly');
+INSERT INTO ingredients VALUES (1, 'jl6ww', 'bread');
 
 # Add data: categories
-INSERT INTO categories VALUES (1, 'lunch');
+INSERT INTO categories VALUES (1, 'jl6ww', 'lunch');
 
 # Add data: allergens
-INSERT INTO allergens VALUES (1, 'peanut');
+INSERT INTO allergens VALUES (1, 'jl6ww', 'peanut');
 
 # Add data: reviews
-INSERT INTO reviews VALUES (1, 'Wow this is a really great PB&J recipe, 10/10 would recommend, a delectable snack');
-INSERT INTO reviews VALUES (1, 'This is a mediocre PB&J recipe, rip my tastebuds');
+INSERT INTO reviews VALUES (1, 'jl6ww', 'Wow this is a really great PB&J recipe, 10/10 would recommend, a delectable snack');
+INSERT INTO reviews VALUES (1, 'jl6ww', 'This is a mediocre PB&J recipe, rip my tastebuds');
 
 # Add data: dietaryRestrictions
-INSERT INTO dietaryRestrictions VALUES (1, 'vegetarian');
+INSERT INTO dietaryRestrictions VALUES (1, 'jl6ww', 'vegetarian');
 
 # Add data: pin
-INSERT INTO pin VALUES (1, 'mds2cf', 0);
-INSERT INTO pin VALUES (1, 'rmz6yx', 1);
+INSERT INTO pin VALUES (1, 'jl6ww', 'mds2cf', 0);
+INSERT INTO pin VALUES (1, 'jl6ww', 'rmz6yx', 1);
+INSERT INTO pin VALUES (1, 'jl6ww', 'amh2sd', 1);
+INSERT INTO pin VALUES (1, 'jl6ww', 'jasminli', 1);
+INSERT INTO pin VALUES (1, 'jl6ww', 'rebeccazhou', 1);
+INSERT INTO pin VALUES (1, 'jl6ww', 'alicehan', 1);
 
-# ---------------------------------- RECIPE2 ----------------------------------
+# ---------------------------------- recipe 2 ----------------------------------
+
+# Add data: recipes
+INSERT INTO recipes (username, recipeName, instructions, instructionCount, country, cookingTime, recipePinCount) VALUES ('jl6ww', 'Hot Chocolate', "Heat up milk over a saucepan. Whisk in cocoa powder and sugar. Once the milk is warm, add in chocolate chips. Add a splash of vanilla extract.", 4, 'Mexico', 6, 1);
+
+# Add data: ingredients
+INSERT INTO ingredients VALUES (2, 'jl6ww', 'milk');
+INSERT INTO ingredients VALUES (2, 'jl6ww',  'cocoa powder');
+INSERT INTO ingredients VALUES (2, 'jl6ww', 'sugar');
+INSERT INTO ingredients VALUES (2, 'jl6ww', 'chocolate chips');
+INSERT INTO ingredients VALUES (2, 'jl6ww', 'vanilla extract');
+
+# Add data: categories
+INSERT INTO categories VALUES (2, 'jl6ww', 'beverage');
+
+# Add data: allergens
+INSERT INTO allergens VALUES (2, 'jl6ww', 'milk');
+
+# Add data: reviews
+INSERT INTO reviews VALUES (2, 'jl6ww', 'This tastes amazing');
+INSERT INTO reviews VALUES (2, 'jl6ww', 'My go to recipe for hot chocolate');
+
+# Add data: pin
+INSERT INTO pin VALUES (2, 'jl6ww', 'mds2cf', 0);
+INSERT INTO pin VALUES (2, 'jl6ww', 'rmz6yx', 1);
+INSERT INTO pin VALUES (2, 'jl6ww', 'jasminli', 1);
+INSERT INTO pin VALUES (2, 'jl6ww', 'amh2sd', 1);
+INSERT INTO pin VALUES (2, 'jl6ww', 'alicehan', 1);
+INSERT INTO pin VALUES (2, 'jl6ww', 'rebeccazhou', 1);
+
+# ---------------------------------- recipe 3 ----------------------------------
 
 
-# ---------------------------------- RECIPE3 ----------------------------------
+# ---------------------------------- recipe 4 ----------------------------------
 
 
-# ---------------------------------- RECIPE4 ----------------------------------
+# ---------------------------------- recipe 5 ----------------------------------
 
 
+# ---------------------------------- recipe 6 ----------------------------------
 
 
-# ---------------------------------- RECIPE5 ----------------------------------
+# ---------------------------------- recipe 7 ----------------------------------
 
 
-# ---------------------------------- RECIPE6 ----------------------------------
+# ---------------------------------- recipe 8 ----------------------------------
 
 
-# ---------------------------------- RECIPE7 ----------------------------------
+# ---------------------------------- recipe 9 ----------------------------------
+
+
+# ---------------------------------- recipe 10 ----------------------------------
 
 
 # ---------------------------------- COMMANDS TO DO WITH USERS ----------------------------------
@@ -414,8 +500,12 @@ SELECT * FROM recipes WHERE recipes.username = 'jl6ww';
 # what are we gonna allow users to edit?
 UPDATE recipes SET instructions = 'Spread the peanut butter on one piece of bread. Spread the jelly on the other side. Put the two pieces of bread together to form a sandwich.' WHERE recipes.recipeID = 1 AND recipes.username = 'jl6ww';
 
-# Delete data: recipes
-DELETE FROM recipes WHERE recipes.recipeID = 1;
-
 # Filter (sort) data: by allergen
-SELECT * FROM recipes NATURAL JOIN allergens WHERE allergen <> "peanut";
+SELECT * FROM recipes NATURAL LEFT OUTER JOIN allergens WHERE allergen <> "peanut" OR allergen IS NULL;
+SELECT * FROM recipes NATURAL LEFT OUTER JOIN allergens WHERE allergen <> "almond" OR allergen IS NULL;
+
+# Update data: pin (unpin recipes and updates everything using triggers and stored procedures)
+DELETE FROM pin WHERE recipeID = 2 AND cookUsername = 'jl6ww' AND username = 'jasminli';
+
+# Delete data: recipes (deletes everything associated with recipe with a trigger)
+# DELETE FROM recipes WHERE recipeID = 1 AND username = 'jl6ww';
