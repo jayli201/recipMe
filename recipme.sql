@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS recipes (
 CREATE TABLE IF NOT EXISTS instructions (
     recipeID int,
     username varchar(40), 
-    instructions text, 
-    difficulty varchar(10	),
+    instructions text NOT NULL, 
+    difficulty varchar(10	) NOT NULL,
     primary key(recipeID, username)
 );
 
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS instructions (
 CREATE TABLE IF NOT EXISTS recipePinCount (
     recipeID int,
     username varchar(40), 
-    recipePinCount int,
-    popularity varchar(40),
+    recipePinCount int NOT NULL,
+    popularity varchar(40) NOT NULL,
     primary key(recipeID, username)
 );
 
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS foodies (
 CREATE TABLE IF NOT EXISTS cookPinCount(
     username varchar(40),
     cookPinCount int NOT NULL,
-    expertise varchar(40),
+    expertise varchar(40) NOT NULL,
     primary key(username)
 );
 
@@ -167,7 +167,7 @@ CREATE TRIGGER instructionDifficultyTrigger
 AFTER INSERT ON recipes
 FOR EACH ROW
 BEGIN
-	INSERT INTO instructions (recipeID, username, instructions) VALUES (NEW.recipeID, NEW.username, NEW.instructions);
+	INSERT INTO instructions (recipeID, username, instructions, difficulty) VALUES (NEW.recipeID, NEW.username, NEW.instructions, "easy");
     	IF NEW.instructionCount BETWEEN 0 AND 5
 	THEN
 		UPDATE instructions SET difficulty = "easy" WHERE instructions = NEW.instructions AND username = NEW.username;
