@@ -3,19 +3,19 @@ require('environment.php');
 /******************************/
 // connecting to DB on XAMPP (local)
 
-$username = $_ENV['LOCAL_USERNAME'];
-$password = $_ENV['LOCAL_PASSWORD'];
-$host = $_ENV['LOCAL_HOST'];
-$dbname = $_ENV['LOCAL_DBNAME'];
+// $username = $_ENV['LOCAL_USERNAME'];
+// $password = $_ENV['LOCAL_PASSWORD'];
+// $host = $_ENV['LOCAL_HOST'];
+// $dbname = $_ENV['LOCAL_DBNAME'];
 
 
 /******************************/
 // connecting to DB on CS server
 
-// $username = $_ENV['CS_USERNAME'];
-// $password = $_ENV['CS_PASSWORD'];
-// $host = $_ENV['CS_HOST'];
-// $dbname = $_ENV['CS_DBNAME'];
+$username = $_ENV['CS_USERNAME'];
+$password = $_ENV['CS_PASSWORD'];
+$host = $_ENV['CS_HOST'];
+$dbname = $_ENV['CS_DBNAME'];
 
 /******************************/
 
