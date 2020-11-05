@@ -12,6 +12,7 @@
   
 <?php include('header.html') ?>
 <div>
+   <br>
    <h1>Welcome to RecipMe!</h1>
    <h3>Where anyone can submit their own recipes and explore new recipes</h3>
    </div>
