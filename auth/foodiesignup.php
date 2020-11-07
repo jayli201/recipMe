@@ -1,5 +1,5 @@
 <?php
-require("connectdb.php");   
+require("../connectdb.php");   
 
 if (isset($_POST['action'])){
    if (!empty($_POST['action']) && ($_POST['action'] == 'Sign Up')) {
@@ -14,7 +14,7 @@ if (isset($_POST['action'])){
       // after creating an account, fill in session details
       $_SESSION['uname'] = $_POST['username'];
       // go to mainpage afterwards
-      header('Location: mainpage.php');
+      header('Location: ../mainpage.php');
    }
 }
 ?>
@@ -27,7 +27,7 @@ if (isset($_POST['action'])){
    <meta name="viewport" content="width=device-width, initial-scale=1">  
    <title>Sign Up</title> 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
-   <link rel="stylesheet" href="custom-style.css" />   
+   <link rel="stylesheet" href="../custom-style.css" />   
 </head>
 
 <body>

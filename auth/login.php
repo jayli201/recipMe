@@ -1,5 +1,5 @@
 <?php
-   require("connectdb.php");
+   require("../connectdb.php");
 
    if (isset($_POST['login'])){
       // escape special characters for the username and password
@@ -17,7 +17,7 @@
             // fill in session details
             $_SESSION['uname'] = $uname;
             // go to mainpage afterwards
-            header('Location: mainpage.php');
+            header('Location: ../mainpage.php');
          } else {
             echo "Invalid username and password";
          }
@@ -33,7 +33,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">  
    <title>Log In</title> 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
-   <link rel="stylesheet" href="custom-style.css" />   
+   <link rel="stylesheet" href="../custom-style.css" />   
 </head>
    <div>
       <h1>Welcome to RecipMe!</h1>
