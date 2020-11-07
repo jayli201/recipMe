@@ -1,16 +1,5 @@
 <?php
 include "connectdb.php";
-
-// Check user login or not
-if(!isset($_SESSION['uname'])){
-    header('Location: login.php');
-}
-
-// logout
-if(isset($_POST['logout'])){
-    session_destroy();
-    header('Location: login.php');
-}
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +8,7 @@ if(isset($_POST['logout'])){
    <meta charset="utf-8">   
    <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!-- required to handle IE -->
    <meta name="viewport" content="width=device-width, initial-scale=1">  
-   <title>RecipMe</title> 
+   <title>My Pinned Recipes</title> 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
    <link rel="stylesheet" href="custom-style.css" />   
 </head>
@@ -30,8 +19,8 @@ include('header.html')
 ?>
 
 <div>
-   <br>
-    <h1>All Recipes</h1>
+    <br />
+    <h1>Your Pinned Recipes</h1> 
 </div>
 
 <?php include('footer.html') ?>

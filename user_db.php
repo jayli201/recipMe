@@ -33,18 +33,38 @@ function addUser($username, $email, $password, $firstName, $lastName, $isCook)
   // global allows us to connect to instance of db in connectdb.db
   global $db;
 
-  // good way to write (prepare)
-  $query = "INSERT INTO users VALUES(:username, :email, :password, :firstName, :lastName, :isCook)";  
-      // use : (colon) for template
-  $statement = $db->prepare($query);
-  $statement->bindValue(':username', $username);
-  $statement->bindValue(':email', $email);
-  $statement->bindValue(':password', $password);
-  $statement->bindValue(':firstName', $firstName);
-  $statement->bindValue(':lastName', $lastName);
-  $statement->bindValue(':isCook', $isCook);
-  $statement->execute();      // run query
-  $statement->closeCursor();  // release hold on this connection
+  $sql_query = "INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES ('$username', '$email', '$password', '$firstName', '$lastName', '$isCook')";
+  $result = $db->query($sql_query);
+
+  if (!$result) {
+    printf("%s\n", $mysqli->error);
+    exit();
+ }
+ 
+
+  // $stmt = $db->prepare("INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES (?,?,?,?,?,?)");
+  // $stmt->bind_param("ssssss", $username, $email, $password, $firstName, $lastName, $isCook);
+  
+  // if ($result = $stmt->execute()){
+  //   echo "success";
+  //   $stmt->free_result();
+  // } else {
+  //   echo "error";
+  // }
+  // $stmt->close();
+
+  // // good way to write (prepare)
+  // $query = "INSERT INTO users VALUES(:username, :email, :password, :firstName, :lastName, :isCook)";  
+  //     // use : (colon) for template
+  // $statement = $db->prepare($query);
+  // $statement->bindValue(':username', $username);
+  // $statement->bindValue(':email', $email);
+  // $statement->bindValue(':password', $password);
+  // $statement->bindValue(':firstName', $firstName);
+  // $statement->bindValue(':lastName', $lastName);
+  // $statement->bindValue(':isCook', $isCook);
+  // $statement->execute();      // run query
+  // $statement->closeCursor();  // release hold on this connection
 
 }
    
