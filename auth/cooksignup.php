@@ -8,6 +8,8 @@ if (isset($_POST['action'])){
       $result = mysqli_query($db,$sql_query);
 
       // add areas of experience
+      $sql_foodquery = "INSERT INTO areasOfExperience(username, area) VALUES ('".$_POST["username"]."', '".$_POST['area']."')";
+      $result = mysqli_query($db,$sql_foodquery);
 
       // after creating an account, fill in session details
       $_SESSION['uname'] = $_POST['username'];
@@ -31,6 +33,7 @@ if (isset($_POST['action'])){
 <body>
 <div>
 <form action="" method="post">
+   <br />
    <h1>Sign Up As a Cook</h1>
    <div>
       <input type="text" id="username" name="username" placeholder="Username" required />        
@@ -48,8 +51,7 @@ if (isset($_POST['action'])){
       <input type="text" id="email" name="email" placeholder="Email" required />        
    </div> 
    <div>
-   <!-- convert this to a free form -->
-      <input type="text" id="areasOfExperience" name="areasOfExperience" placeholder="Areas of Experience" />
+      <input type="text" id="area" name="area" placeholder="Areas of Experience" required />
    </div>
    <div>
       <input type="submit" value="Sign Up" id="action" name="action" />
