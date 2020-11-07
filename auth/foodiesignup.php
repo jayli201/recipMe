@@ -32,8 +32,9 @@ if (isset($_POST['action'])){
 
 <body>
 <div>
+   <br />
+   <h1>Sign Up As a Foodie</h1>
    <form action="" method="post">
-      <h1>Sign Up As a Foodie</h1>
       <div>
          <input type="text" id="username" name="username" placeholder="Username" required />        
       </div>  

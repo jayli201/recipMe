@@ -19,7 +19,7 @@
             // go to mainpage afterwards
             header('Location: ../mainpage.php');
          } else {
-            echo "Invalid username and password";
+            $error = "Invalid username or password";
          }
       }
    }
@@ -39,6 +39,7 @@
       <br />
       <h1>Welcome to RecipMe!</h1>
       <h2>Where anyone can submit their own recipes and explore new recipes</h3>
+      <br />
       <form method="post" action="">
          <div>
             <h1>Login</h1>
@@ -48,6 +49,7 @@
             <div>
                <input type="password" class="textbox" id="uname" name="pwd" placeholder="Password" required/>
             </div>
+            <div style = "color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
             <div>
                <button type="submit" value="Login" name="login" id="login">Login</button>
             </div>
