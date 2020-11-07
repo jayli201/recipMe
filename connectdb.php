@@ -1,5 +1,8 @@
 <?php
+// start a session
+session_start();
 require('environment.php');
+
 /******************************/
 // connecting to DB on XAMPP (local)
 
@@ -25,8 +28,9 @@ $db = "";
 /** connect to the database **/
 try 
 {
-   $db = new PDO($dsn, $username, $password);   
-   echo "<p>You are connected to the database</p>";
+   // $db = new PDO($dsn, $username, $password);   
+   $db = mysqli_connect($host,$username,$password,$dbname);
+   // echo "<p>You are connected to the database</p>";
 }
 catch (PDOException $e)     // handle a PDO exception (errors thrown by the PDO library)
 {
