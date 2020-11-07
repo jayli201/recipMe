@@ -8,7 +8,7 @@
       $myusername = mysqli_real_escape_string($db,$_POST['username']);
       $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
       
-	  $sql = "SELECT username FROM users WHERE username = '$myusername' and password = '$mypassword'";
+	  	$sql = "SELECT username FROM users WHERE username = '$myusername' and password = '$mypassword'";
 	    //   $sql = "SELECT username FROM users WHERE username = '$myusername'";
 
       $result = mysqli_query($db,$sql);
@@ -20,7 +20,7 @@
       // If result matched $myusername and $mypassword, table row must be 1 row
 		
       if($count == 1) {
-		echo "<p>You are connected to the database</p>";
+				echo "<p>You are connected to the database</p>";
          session_register("myusername");
          $_SESSION['login_user'] = $myusername;
          
