@@ -1,7 +1,7 @@
 <?php
 include "connectdb.php";
 
-// Check user login or not
+// Check if user is logged in or not
 if(!isset($_SESSION['uname'])){
     header('Location: auth/login.php');
 }

@@ -31,11 +31,12 @@
    <meta charset="utf-8">   
    <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!-- required to handle IE -->
    <meta name="viewport" content="width=device-width, initial-scale=1">  
-   <title>Log In</title> 
+   <title>Welcome</title> 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
    <link rel="stylesheet" href="../custom-style.css" />   
 </head>
    <div>
+      <br />
       <h1>Welcome to RecipMe!</h1>
       <h2>Where anyone can submit their own recipes and explore new recipes</h3>
       <form method="post" action="">

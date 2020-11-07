@@ -1,4 +1,17 @@
 <?php
+include "connectdb.php";
+
+// Check if user is logged in or not
+if(!isset($_SESSION['uname'])){
+    header('Location: auth/login.php');
+}
+
+// logout
+if(isset($_POST['logout'])){
+    session_destroy();
+    header('Location: auth/login.php');
+}
+
 $name = $email = $comment = NULL;
 $name_msg = $email_msg = $comment_msg = NULL;
 
