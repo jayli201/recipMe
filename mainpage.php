@@ -1,3 +1,7 @@
+<?php 
+include('session.php')
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,11 +14,15 @@
 </head>
 <body>
   
-<?php include('header.html') ?>
+<?php 
+include('header.html') 
+?>
 <div>
    <br>
    <h1>Welcome to RecipMe!</h1>
    <h3>Where anyone can submit their own recipes and explore new recipes</h3>
+   <h1>Welcome <?php echo $login_session; ?></h1> 
+    <h2><a href = "logout.php">Sign Out</a></h2>
    </div>
 <?php include('footer.html') ?>
   
