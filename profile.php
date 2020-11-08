@@ -19,6 +19,7 @@ if (isset($_POST['action'])) {
    }
 }
 
+// foodies can update their favorite food
 function updateFavoriteFood($favoriteFood)
 {
    global $db;
@@ -29,6 +30,7 @@ function updateFavoriteFood($favoriteFood)
    $stmt->close();
 }
 
+// displays all user information, differentiating between cooks and foodies
 function displayUserInfo($username)
 {
    global $db;
@@ -40,23 +42,59 @@ function displayUserInfo($username)
       while ($row = mysqli_fetch_assoc($result)) {
          echo "Name: " . $row["firstName"] . " " . $row["lastName"] . "<br>";
          echo "Email: " . $row["email"] . "<br>";
-         if (!$row["isCook"]) {
-            $favoriteFoodQuery =
+
+         // if cook, also display cookPinCount and expertise
+         if ($row["isCook"]) {
+            $cookQuery =
+               "SELECT * FROM cookPinCount, users WHERE cookPinCount.username = users.username AND cookPinCount.username = '" . $username . "'";
+            $cookResult = mysqli_query($db, $cookQuery);
+            if (mysqli_num_rows($cookResult) > 0) {
+               while ($row = mysqli_fetch_array($cookResult)) {
+                  echo "Cook Pin Count: " . $row['cookPinCount'] . "<br>";
+                  echo "Expertise: " . $row['expertise'] . "<br>";
+               }
+               mysqli_free_result($cookQuery);
+            } else {
+               echo "0 results from displayCookInfo()";
+            }
+         }
+
+         // else if foodie, also display favoriteFood
+         else {
+            $foodieQuery =
                "SELECT foodies.favoriteFood FROM foodies, users WHERE foodies.username = users.username AND foodies.username = '" . $username . "'";
-            $favoriteFood = mysqli_query($db, $favoriteFoodQuery);
-            if (mysqli_num_rows($favoriteFood) > 0) {
-               while ($row = mysqli_fetch_array($favoriteFood)) {
+            $foodieResult = mysqli_query($db, $foodieQuery);
+            if (mysqli_num_rows($foodieResult) > 0) {
+               while ($row = mysqli_fetch_array($foodieResult)) {
                   echo "Favorite Food: " . $row['favoriteFood'];
                }
-               mysqli_free_result($favoriteFood);
+               mysqli_free_result($foodieQuery);
             } else {
-               echo "0 results";
+               echo "0 results from displayFoodieInfo()";
             }
          }
       }
       mysqli_free_result($query);
    } else {
-      echo "0 results";
+      echo "0 results from displayUserInfo()";
+   }
+   return $result;
+}
+
+// gets all the recipes that this user submitted
+function getAllRecipes($username)
+{
+   global $db;
+
+   $query =
+      "SELECT * FROM recipes, users WHERE recipes.username = users.username AND users.username = '" . $username . "'";
+
+   $result = mysqli_query($db, $query);
+
+   if (mysqli_num_rows($result) > 0) {
+      mysqli_free_result($query);
+   } else {
+      echo "You haven't submitted any recipes yet!";
    }
    return $result;
 }
@@ -72,7 +110,7 @@ function isCook($username)
       }
       mysqli_free_result($query);
    } else {
-      echo "0 results";
+      echo "0 results from isCook";
    }
    return $result;
 }
@@ -102,8 +140,34 @@ function isCook($username)
       <h1>Welcome back, <?php echo $_SESSION['uname']; ?>!</h1>
       <p><?php displayUserInfo($_SESSION['uname']) ?></p>
 
-      <!-- display foodie info only if not a cook -->
-      <?php if (!isCook($_SESSION['uname'])) : ?>
+      <!-- display cook info for cooks: submitted recipes, cookPinCount, expertise-->
+      <?php if (isCook($_SESSION['uname'])) : ?>
+         <?php $recipes = getAllRecipes($_SESSION['uname']); ?>
+         <h2>Your Recipes</h2>
+         <?php foreach ($recipes as $recipe) : ?>
+            <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+               <thead>
+                  <tr style="background-color:#B0B0B0">
+                     <th width="10%">Recipe Name</th>
+                     <th width="50%">Instructions</th>
+                     <th width="25%">Country</th>
+                     <th width="10%">Cooking Time</th>
+                     <th width="10%">Pin Count</th>
+                  </tr>
+               </thead>
+               <tr>
+                  <td><?php echo $recipe['recipeName']; ?></td>
+                  <td><?php echo $recipe['instructions']; ?></td>
+                  <td><?php echo $recipe['country']; ?></td>
+                  <td><?php echo $recipe['cookingTime']; ?></td>
+                  <td><?php echo $recipe['recipePinCount']; ?></td>
+
+               </tr>
+            </table>
+         <?php endforeach; ?>
+
+         <!-- display foodie info for foodies: favoriteFood -->
+      <?php else : ?>
          <form name="mainForm" action="profile.php" method="post">
             <div class="form-group">
                Update Your Favorite Food!
@@ -111,9 +175,13 @@ function isCook($username)
                <input type="submit" value="Confirm update" name="action" class="button" title="Confirm update favoriteFood" />
             </div>
          </form>
-
       <?php endif; ?>
+
    </div>
+
+   <br />
+   <br />
+   <br />
 
    <?php include('footer.html') ?>
 
