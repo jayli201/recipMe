@@ -23,7 +23,7 @@ $dbname = $_ENV['CS_DBNAME'];
 /******************************/
 
 $dsn = "mysql:host=$host;dbname=$dbname";
-$db = "";
+$db;  // changed from string to object (used to be $db = "";)
 
 /** connect to the database **/
 try {
