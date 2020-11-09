@@ -31,6 +31,25 @@ function updateFavoriteFood($favoriteFood)
    $stmt->close();
 }
 
+function displayAreasOfExperience($username)
+{
+   global $db;
+
+   $query = "SELECT * FROM users, areasOfExperience WHERE users.username = areasOfExperience.username AND areasOfExperience.username = '" . $username . "'";
+   $result = mysqli_query($db, $query);
+
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_array($result)) {
+         echo "Areas of Experience: " . $row['area'] . "<br>";
+      }
+      mysqli_free_result($query);
+   } else {
+      echo "Areas of Experience: N/A <br>";
+   }
+
+   return $result;
+}
+
 // displays all user information, differentiating between cooks and foodies
 function displayUserInfo($username)
 {
@@ -53,6 +72,7 @@ function displayUserInfo($username)
                while ($row = mysqli_fetch_array($cookResult)) {
                   echo "Cook Pin Count: " . $row['cookPinCount'] . "<br>";
                   echo "Expertise: " . $row['expertise'] . "<br>";
+                  displayAreasOfExperience($username);
                }
                mysqli_free_result($cookQuery);
             } else {
