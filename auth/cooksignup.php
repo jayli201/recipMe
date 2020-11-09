@@ -13,6 +13,7 @@ if (isset($_POST['action'])) {
 
       // after creating an account, fill in session details
       $_SESSION['uname'] = $_POST['username'];
+      $_SESSION['isCook'] = 1;
       // go to mainpage afterwards
       header('Location: ../mainpage.php');
    }

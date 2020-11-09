@@ -7,20 +7,24 @@ if (isset($_POST['login'])) {
    $password = mysqli_real_escape_string($db, $_POST['pwd']);
 
    if ($uname != "" && $password != "") {
-      $sql_query = "SELECT count(*) AS cntUser FROM users WHERE username='" . $uname . "' and password='" . $password . "'";
-      $result = mysqli_query($db, $sql_query);
-      $row = mysqli_fetch_array($result);
+      $query = "SELECT isCook FROM users WHERE username = ? AND password = ?";
+      $stmt = $db->prepare($query);
+      $stmt->bind_param("ss", $uname, $password);
+      $stmt->execute();
+      $stmt->bind_result($isCook);
+      $stmt->store_result();
 
-      $count = $row['cntUser'];
-      // if you found a user...
-      if ($count > 0) {
+      if ($stmt->num_rows() == 1) {
          // fill in session details
          $_SESSION['uname'] = $uname;
+         $_SESSION['isCook'] = $isCook;
          // go to mainpage afterwards
          header('Location: ../mainpage.php');
+         exit();
       } else {
          $error = "Invalid username or password";
       }
+      $stmt->close();
    }
 }
 ?>

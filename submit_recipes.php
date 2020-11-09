@@ -1,9 +1,17 @@
 <?php
 include "connectdb.php";
+include "display_recipes_sql.php";
 
 // Check if user is logged in or not
 if (!isset($_SESSION['uname'])) {
     header('Location: auth/login.php');
+}
+
+// Check that user is a cook
+// If a foodie, then redirect to mainpage.php 
+// foodies cannot submit a recipe
+if (!isCook($_SESSION['uname'])) {
+    header('Location: mainpage.php');
 }
 
 // logout
@@ -28,7 +36,11 @@ if (isset($_POST['logout'])) {
 <body>
 
     <?php
-    include('header.html')
+    if (isCook($_SESSION['uname'])) {
+        include('cook_header.html');
+    } else {
+        include('foodie_header.html');
+    }
     ?>
 
     <div>

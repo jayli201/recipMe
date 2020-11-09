@@ -37,7 +37,11 @@ if (isset($_POST['unpin'])) {
 <body>
 
    <?php
-   include('header.html')
+   if (isCook($_SESSION['uname'])) {
+      include('cook_header.html');
+   } else {
+      include('foodie_header.html');
+   }
    ?>
 
    <div>

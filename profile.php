@@ -119,22 +119,6 @@ function displayUserInfo($username)
    return $result;
 }
 
-function isCook($username)
-{
-   global $db;
-   $query = "SELECT isCook FROM users WHERE username = '" . $username . "'";
-   $result = mysqli_query($db, $query);
-   if (mysqli_num_rows($result) > 0) {
-      while ($row = mysqli_fetch_assoc($result)) {
-         return ($row["isCook"]);
-      }
-      mysqli_free_result($query);
-   } else {
-      echo "0 results from isCook";
-   }
-   return $result;
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -152,7 +136,11 @@ function isCook($username)
 <body>
 
    <?php
-   include('header.html')
+   if (isCook($_SESSION['uname'])) {
+      include('cook_header.html');
+   } else {
+      include('foodie_header.html');
+   }
    ?>
 
    <div>

@@ -1,6 +1,24 @@
 <?php
 include "connectdb.php";
 
+// given session username, determines if the user is a cook
+// can also use the $_SESSION['isCook'] 
+function isCook($username)
+{
+   global $db;
+   $query = "SELECT isCook FROM users WHERE username = '" . $username . "'";
+   $result = mysqli_query($db, $query);
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_assoc($result)) {
+         return ($row["isCook"]);
+      }
+      mysqli_free_result($query);
+   } else {
+      echo "0 results from isCook";
+   }
+   return $result;
+}
+
 // sort recipes by allergens
 function sortByAllergens($allergen)
 {
