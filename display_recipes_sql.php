@@ -68,8 +68,18 @@ function displayRecipe($recipeID, $cookUsername)
          }
          echo hasAttempted($row["attempted"]) . "<br> <br>";
 
-         // don't display unpin option for the cook's own recipe (cook cannot unpin his own recipe)
-         if ($row["username"] != $cookUsername) {
+         // if cook is viewing his own recipe, have option to delete (and no option to unpein)
+         if ($row["username"] == $cookUsername) {
+            echo "<form action='profile.php' method='post'>
+            <div class='form-group'>
+               <input type='hidden' name='recipeID' value='$recipeID'/>
+               <input type='submit' value='Delete' name='delete' class='button' />
+            </div>
+            </form>";
+         }
+
+         // else if cook is not viewing his own recipe, have the option to unpin
+         else {
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
                      <input type='submit' value='Unpin' name='unpin' />

@@ -14,9 +14,16 @@ if (isset($_POST['logout'])) {
 }
 
 // update favoriteFood
-if (isset($_POST['action'])) {
-   if (!empty($_POST['action']) && ($_POST['action'] == 'Confirm update')) {
+if (isset($_POST['update'])) {
+   if (!empty($_POST['update']) && ($_POST['update'] == 'Confirm update')) {
       updateFavoriteFood($_POST['favoriteFood']);
+   }
+}
+
+// delete a recipe
+elseif (isset($_POST['delete'])) {
+   if (!empty($_POST['delete']) && ($_POST['delete'] == 'Delete')) {
+      deleteRecipe($_POST['recipeID']);
    }
 }
 
@@ -27,6 +34,16 @@ function updateFavoriteFood($favoriteFood)
    $query = "UPDATE foodies SET favoriteFood = ? WHERE username = ?";
    $stmt = $db->prepare($query);
    $stmt->bind_param("ss", $favoriteFood, $_SESSION['uname']);
+   $stmt->execute();
+   $stmt->close();
+}
+
+function deleteRecipe($recipeID)
+{
+   global $db;
+   $query = "DELETE FROM recipes WHERE recipeID = ?";
+   $stmt = $db->prepare($query);
+   $stmt->bind_param("i", $recipeID);
    $stmt->execute();
    $stmt->close();
 }
@@ -154,7 +171,7 @@ function isCook($username)
             <div class="form-group">
                Update Your Favorite Food!
                <input type="text" class="form-control" name="favoriteFood" required />
-               <input type="submit" value="Confirm update" name="action" class="button" title="Confirm update favoriteFood" />
+               <input type="submit" value="Confirm update" name="update" class="button" title="Confirm update favoriteFood" />
             </div>
          </form>
       <?php endif; ?>
