@@ -67,11 +67,15 @@ function displayRecipe($recipeID, $cookUsername)
             echo " pins <br>";
          }
          echo hasAttempted($row["attempted"]) . "<br> <br>";
-         echo "<form action='' method='post'>
+
+         // don't display unpin option for the cook's own recipe (cook cannot unpin his own recipe)
+         if ($row["username"] != $cookUsername) {
+            echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
                      <input type='submit' value='Unpin' name='unpin' />
                   </form>
                   <br> <br>";
+         }
       }
       mysqli_free_result($query);
    }
@@ -154,6 +158,26 @@ function displayPinnedRecipes($username)
       mysqli_free_result($query);
    } else {
       echo "<h2> You haven't pinned any recipes yet! </h2> <br>";
+   }
+   return $result;
+}
+
+// displays all the recipes that this user submitted
+function displayAllRecipes($username)
+{
+   global $db;
+   $query =
+      "SELECT * FROM recipes, users WHERE recipes.username = users.username AND users.username = '" . $username . "'";
+
+   $result = mysqli_query($db, $query);
+
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_array($result)) {
+         displayRecipe($row['recipeID'], $username);
+      }
+      mysqli_free_result($query);
+   } else {
+      echo "You haven't submitted any recipes yet!";
    }
    return $result;
 }

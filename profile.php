@@ -1,5 +1,6 @@
 <?php
 include "connectdb.php";
+include "display_recipes_sql.php";
 
 // Check if user is logged in or not
 if (!isset($_SESSION['uname'])) {
@@ -81,24 +82,6 @@ function displayUserInfo($username)
    return $result;
 }
 
-// gets all the recipes that this user submitted
-function getAllRecipes($username)
-{
-   global $db;
-
-   $query =
-      "SELECT * FROM recipes, users WHERE recipes.username = users.username AND users.username = '" . $username . "'";
-
-   $result = mysqli_query($db, $query);
-
-   if (mysqli_num_rows($result) > 0) {
-      mysqli_free_result($query);
-   } else {
-      echo "You haven't submitted any recipes yet!";
-   }
-   return $result;
-}
-
 function isCook($username)
 {
    global $db;
@@ -142,29 +125,8 @@ function isCook($username)
 
       <!-- display cook info for cooks: submitted recipes, cookPinCount, expertise-->
       <?php if (isCook($_SESSION['uname'])) : ?>
-         <?php $recipes = getAllRecipes($_SESSION['uname']); ?>
          <h2>Your Recipes</h2>
-         <?php foreach ($recipes as $recipe) : ?>
-            <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
-               <thead>
-                  <tr style="background-color:#B0B0B0">
-                     <th width="10%">Recipe Name</th>
-                     <th width="50%">Instructions</th>
-                     <th width="25%">Country</th>
-                     <th width="10%">Cooking Time</th>
-                     <th width="10%">Pin Count</th>
-                  </tr>
-               </thead>
-               <tr>
-                  <td><?php echo $recipe['recipeName']; ?></td>
-                  <td><?php echo $recipe['instructions']; ?></td>
-                  <td><?php echo $recipe['country']; ?></td>
-                  <td><?php echo $recipe['cookingTime']; ?></td>
-                  <td><?php echo $recipe['recipePinCount']; ?></td>
-
-               </tr>
-            </table>
-         <?php endforeach; ?>
+         <?php $recipes = displayAllRecipes($_SESSION['uname']); ?>
 
          <!-- display foodie info for foodies: favoriteFood -->
       <?php else : ?>
