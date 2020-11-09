@@ -3,23 +3,23 @@ require("../connectdb.php");
 
 if (isset($_POST['action'])) {
    if (!empty($_POST['action']) && ($_POST['action'] == 'Sign Up')) {
+      // add this foodie into database
+      $sql_query = "INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES ('" . $_POST["username"] . "', '" . $_POST['email'] . "', '" . $_POST["password"] . "', '" . $_POST["firstName"] . "', '" . $_POST["lastName"] . "', 0)";
+      $result = mysqli_query($db, $sql_query);
+
+      // add favorite food
+      $sql_foodquery = "INSERT INTO foodies(username, favoriteFood) VALUES ('" . $_POST["username"] . "', '" . $_POST['favFood'] . "')";
+      $result = mysqli_query($db, $sql_foodquery);
+
       // $stmt = $db->prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)");
       // $stmt->bind_param("ssssss", $_POST['username'], $_POST['email'], $_POST['password'], $_POST['firstName'], $_POST['lastName'], 0);
       // $stmt->execute();
       // $stmt->close();
 
-      // add this foodie into database
-      $sql_query = "INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES ('" . $_POST["username"] . "', '" . $_POST['email'] . "', '" . $_POST["password"] . "', '" . $_POST["firstName"] . "', '" . $_POST["lastName"] . "', 0)";
-      $result = mysqli_query($db, $sql_query);
-
       // $food_stmt = $db->prepare("INSERT INTO foodies VALUES (?, ?)");
       // $food_stmt->bind_param("ss", $_POST['username'], $_POST['favFood']);
       // $food_stmt->execute();
       // $food_stmt->close();
-
-      // add favorite food
-      $sql_foodquery = "INSERT INTO foodies(username, favoriteFood) VALUES ('" . $_POST["username"] . "', '" . $_POST['favFood'] . "')";
-      $result = mysqli_query($db, $sql_foodquery);
 
       // after creating an account, fill in session details
       $_SESSION['uname'] = $_POST['username'];
