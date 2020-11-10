@@ -13,10 +13,17 @@ if (isset($_POST['logout'])) {
    header('Location: auth/login.php');
 }
 
-// update favoriteFood
+// foodies: update favoriteFood
 if (isset($_POST['update'])) {
    if (!empty($_POST['update']) && ($_POST['update'] == 'Confirm update')) {
       updateFavoriteFood($_POST['favoriteFood']);
+   }
+}
+
+// cooks: update area of experience
+if (isset($_POST['updateAreas'])) {
+   if (!empty($_POST['updateAreas']) && ($_POST['updateAreas'] == 'Confirm update')) {
+      updateAreasOfExperience($_POST['area']);
    }
 }
 
@@ -34,6 +41,17 @@ function updateFavoriteFood($favoriteFood)
    $query = "UPDATE foodies SET favoriteFood = ? WHERE username = ?";
    $stmt = $db->prepare($query);
    $stmt->bind_param("ss", $favoriteFood, $_SESSION['uname']);
+   $stmt->execute();
+   $stmt->close();
+}
+
+// cooks can update their areas of expertise
+function updateAreasOfExperience($area)
+{
+   global $db;
+   $query = "UPDATE areasOfExperience SET area = ? WHERE username = ?";
+   $stmt = $db->prepare($query);
+   $stmt->bind_param("ss", $area, $_SESSION['uname']);
    $stmt->execute();
    $stmt->close();
 }
@@ -150,6 +168,13 @@ function displayUserInfo($username)
 
       <!-- display cook info for cooks: submitted recipes, cookPinCount, expertise-->
       <?php if (isCook($_SESSION['uname'])) : ?>
+         <form name="mainForm" action="profile.php" method="post">
+            <div class="form-group">
+               Update Areas of Experience!
+               <input type="text" class="form-control" name="area" required />
+               <input type="submit" value="Confirm update" name="updateAreas" class="button" title="Confirm update area" />
+            </div>
+         </form>
          <h2>Your Recipes</h2>
          <?php $recipes = displayAllRecipes($_SESSION['uname']); ?>
 
