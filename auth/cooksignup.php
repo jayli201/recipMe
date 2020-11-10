@@ -1,15 +1,10 @@
 <?php
 require("../connectdb.php");
+require("auth_sql.php");
 
 if (isset($_POST['action'])) {
    if (!empty($_POST['action']) && ($_POST['action'] == 'Sign Up')) {
-      // add this cook into database
-      $sql_query = "INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES ('" . $_POST["username"] . "', '" . $_POST['email'] . "', '" . $_POST["password"] . "', '" . $_POST["firstName"] . "', '" . $_POST["lastName"] . "', 1)";
-      $result = mysqli_query($db, $sql_query);
-
-      // add areas of experience
-      $sql_foodquery = "INSERT INTO areasOfExperience(username, area) VALUES ('" . $_POST["username"] . "', '" . $_POST['area'] . "')";
-      $result = mysqli_query($db, $sql_foodquery);
+      cookSignUp($_POST['username'], $_POST['email'], $_POST['password'], $_POST['firstName'], $_POST['lastName'], 1, $_POST['area']);
 
       // after creating an account, fill in session details
       $_SESSION['uname'] = $_POST['username'];
