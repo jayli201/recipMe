@@ -208,8 +208,8 @@ function displaySomeRecipe($recipeID, $cookUsername)
          }
          echo "<br>";
          foreach (displayRecipePinCount($recipeID, $cookUsername) as $pin_count_row) {
-         $pin_count_row;
-         echo " pins <br>";
+            $pin_count_row;
+            echo " pins <br>";
          }
          echo hasAttempted($row["attempted"]) . "<br> <br>";
          if (isPinned($row['recipeID'])) {
@@ -221,6 +221,7 @@ function displaySomeRecipe($recipeID, $cookUsername)
          } else {
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
+                     <input type='hidden' name='cookUsername' value='$cookUsername'/>
                      <input type='submit' value='Pin' name='pin' />
                   </form>
                   <br> <br>";
@@ -437,12 +438,15 @@ function isPinned($recipeID)
 }
 
 // pin a recipe
-function pin($recipeID)
+function pin($recipeID, $cookUsername)
 {
    global $db;
-   $query = "INSERT INTO pin WHERE recipeID = ? AND username = ?";
+
+   $attempted = 0;
+
+   $query = "INSERT INTO pin(recipeID, cookUsername, username, attempted) VALUES (?, ?, ?, ?)";
    $stmt = $db->prepare($query);
-   $stmt->bind_param("ss", $recipeID, $_SESSION['uname']);
+   $stmt->bind_param("ssss", $recipeID, $cookUsername, $_SESSION['uname'], $attempted);
    $stmt->execute();
    $stmt->close();
 }
