@@ -190,6 +190,24 @@ function displayPinnedRecipes($username)
    return $result;
 }
 
+// displays all recipes on site, excluding ones submitted by the user
+// function displaySuggestedRecipes($username)
+// {
+//    global $db
+//    $query = "SELECT * FROM recipes WHERE username != '" . $username . "'");
+//    $result = mysqli_query($db, $query);
+
+//    if (mysqli_num_rows($result) > 0) {
+//       while($row = $result->fetch_assoc()) {
+//          displayRecipe($row['recipeID'], $username);
+//       }
+//       mysqli_free_result($query);
+//    } else {
+//       echo "There are no recipes available to see."
+//    }
+//    return $result
+// }
+
 // displays all the recipes that this user submitted
 function displayAllRecipes($username)
 {

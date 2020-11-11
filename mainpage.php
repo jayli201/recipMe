@@ -39,6 +39,8 @@ if (isset($_POST['logout'])) {
     <div>
         <br>
         <h1>All Recipes</h1>
+        <p><?php displaySuggestedRecipes($_SESSION['uname']) ?></p>
+        <br>
     </div>
 
     <?php include('footer.html') ?>
