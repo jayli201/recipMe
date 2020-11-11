@@ -1,6 +1,9 @@
 <?php
-include "connectdb.php";
-include "display_recipes_sql.php";
+
+include("connectdb.php");
+include("display_recipes_sql.php");
+include("recipes_sql.php");
+
 
 // Check if user is logged in or not
 if (!isset($_SESSION['uname'])) {
@@ -19,6 +22,17 @@ if (isset($_POST['logout'])) {
     session_destroy();
     header('Location: auth/login.php');
 }
+
+//insert the recipe
+if (isset($_POST['action'])) {
+    if (!empty($_POST['action']) && ($_POST['action'] == 'Add')) {
+       addRecipe($_SESSION['uname'], $_POST['recipeName'], $_POST['instructions'], $_POST['instructionCount'], $_POST['country'], $_POST['cookingTime'],1,$_POST['ingredient'],$_POST['category'],$_POST['allergen'],$_POST['restriction']);
+       //stay on the submit recipe page
+       header('Location: submit_recipes.php');
+    }
+ }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +62,44 @@ if (isset($_POST['logout'])) {
         <h1>Submit a Recipe</h1>
     </div>
 
-    <?php include('footer.html') ?>
+    <form action="" method="post">
+         <br />
+         <div>
+            <input type="text" id="recipeName" name="recipeName" placeholder="Name" required />
+         </div>
+         <div>
+         <textarea type="text" id="instructions" name="instructions" placeholder="Instructions" required></textarea>
+         </div>
+         <div>
+         <textarea type="text" id="ingredient" name="ingredient" placeholder="Ingredients (eg. Salt, Pepper, Chicken)" required></textarea>
+        </div>
+         <div>
+         <input type="text" id="category" name="category" placeholder="Categories (eg. Breakfast, Side Dish)" required></input>
+         </div>
+         <div>
+         <input type="text" id="allergen" name="allergen" placeholder="Allergens (eg. Eggs, Milk)" required></input>
+         </div>
+         <div>
+         <input type="text" id="restriction" name="restriction" placeholder="Dietary Restrictions (eg. Vegan, Gluten Free )" required></input>
+         </div>
+         <div>
+            <input type="number" id="instructionCount" name="instructionCount" placeholder="# of Instructions" min="0" required />
+         </div>
+         <div>
+            <input type="number" id="cookingTime" name="cookingTime" placeholder="Total Time" min="0" required />
+         </div>
+         <div>
+         <input type="text" id="country" name="country" placeholder="Country" required />
+         </div>
+         <div>
+            <input type="submit" value="Add" id="action" name="action" />
+         </div>
+      </form>
+
+      <br></br>
+      <hr></hr>
+    
+      <?php include('footer.html') ?>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
