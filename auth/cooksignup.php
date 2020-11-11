@@ -5,12 +5,6 @@ require("auth_sql.php");
 if (isset($_POST['action'])) {
    if (!empty($_POST['action']) && ($_POST['action'] == 'Sign Up')) {
       cookSignUp($_POST['username'], $_POST['email'], $_POST['password'], $_POST['firstName'], $_POST['lastName'], 1, $_POST['area']);
-
-      // after creating an account, fill in session details
-      $_SESSION['uname'] = $_POST['username'];
-      $_SESSION['isCook'] = 1;
-      // go to mainpage afterwards
-      header('Location: ../mainpage.php');
    }
 }
 ?>
