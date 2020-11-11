@@ -66,7 +66,7 @@ if (isset($_POST['up_and_coming'])) {
       <br />
       <form action='' method='post'>
          <div class='form-group'>
-            <h2>Sort by recipe popularity:</h2>
+            <h2>Filter by recipe popularity:</h2>
             <button type='submit' name='up_and_coming'>Up and Coming</button>
             <button type='submit' name='rising_star'>Rising Star</button>
             <button type='submit' name='big_hit'>Big Hit</button>
@@ -75,6 +75,7 @@ if (isset($_POST['up_and_coming'])) {
       </form>
       <br />
       <p><?php displaySomeRecipe($query) ?></p>
+      <br>
       <br>
    </div>
 
