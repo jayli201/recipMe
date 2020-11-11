@@ -7,7 +7,7 @@ if (isset($_POST['login'])) {
    $password = mysqli_real_escape_string($db, $_POST['pwd']);
 
    if ($uname != "" && $password != "") {
-      $query = "SELECT isCook FROM users WHERE username = ? AND password = ?";
+      $query = "SELECT isCook FROM users WHERE BINARY username = ? AND BINARY password = ?";
       $stmt = $db->prepare($query);
       $stmt->bind_param("ss", $uname, $password);
       $stmt->execute();
