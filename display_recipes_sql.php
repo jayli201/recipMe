@@ -168,6 +168,69 @@ function displayExcludedRecipe($recipeID, $cookUsername)
    return $result;
 }
 
+// this function is for displaying recipes on the home page, giving option to pin or unpin
+function displaySomeRecipe($recipeID, $cookUsername)
+{
+   global $db;
+
+   $query = "SELECT * FROM recipes WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
+   $result = mysqli_query($db, $query);
+
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = $result->fetch_assoc()) {
+         // display all recipes excluding your own recipes
+         echo "<h2>" . $row["recipeName"] . "</h2> <br>";
+         echo "<h4> By: " . $row["username"] . "</h4> <br>";
+         echo "<em>Country</em>: " . $row["country"] . "<br>";
+         echo "<em>Ingredients</em>: ";
+         foreach (displayIngredients($recipeID, $cookUsername) as $ingredient_row) {
+            $ingredient_row;
+         }
+         echo "<br> <em>Number of instructions</em>: " . $row["instructionCount"] . "<br>";
+         echo "<em>Instructions</em>: " . $row["instructions"] . "<br>";
+         echo "<em>Total cooking time</em>: " . $row["cookingTime"] . " minutes " . "<br>";
+         echo "<em>Categories</em>: ";
+         foreach (displayCategories($recipeID, $cookUsername) as $category_row) {
+            $category_row;
+         }
+         echo " <br> <em>Allergens</em>: ";
+         foreach (displayAllergens($recipeID, $cookUsername) as $allergen_row) {
+            $allergen_row;
+         }
+         echo " <br> <em>Dietary restrictions</em>: ";
+         foreach (displayRestrictions($recipeID, $cookUsername) as $restriction_row) {
+            $restriction_row;
+         }
+         echo "<br>";
+         echo "<em>Popularity</em>: ";
+         foreach (displayRecipePopularity($recipeID, $cookUsername) as $popularity_row) {
+            $popularity_row;
+         }
+         echo "<br>";
+         foreach (displayRecipePinCount($recipeID, $cookUsername) as $pin_count_row) {
+         $pin_count_row;
+         echo " pins <br>";
+         }
+         echo hasAttempted($row["attempted"]) . "<br> <br>";
+         if (isPinned($row['recipeID'])) {
+            echo "<form action='' method='post'>
+                     <input type='hidden' name='recipeID' value='$recipeID'/>
+                     <input type='submit' value='Unpin' name='unpin' />
+                  </form>
+                  <br> <br>";
+         } else {
+            echo "<form action='' method='post'>
+                     <input type='hidden' name='recipeID' value='$recipeID'/>
+                     <input type='submit' value='Pin' name='pin' />
+                  </form>
+                  <br> <br>";
+         }
+      }
+      mysqli_free_result($query);
+   }
+   return $result;
+}
+
 // given the session's username, display your pinned recipes, excluding your own recipes
 function displayPinnedRecipes($username)
 {
@@ -199,7 +262,7 @@ function displaySuggestedRecipes($username)
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         displayRecipe($row['recipeID'], $row['username']);
+         displaySomeRecipe($row['recipeID'], $row['username']);
       }
       mysqli_free_result($query);
    } else {
@@ -355,6 +418,21 @@ function isOwnRecipe($recipeID)
             return false;
          }
       }
+   }
+}
+
+// checks if pinnned
+function isPinned($recipeID)
+{
+   global $db;
+
+   $query = "SELECT * FROM pin WHERE recipeID = '" . $recipeID . "' AND username = '" . $_SESSION['uname'] . "'";
+   $result = mysqli_query($db, $query);
+
+   if (mysqli_num_rows($result) > 0) {
+      return true;
+   } else {
+      return false;
    }
 }
 

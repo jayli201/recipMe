@@ -12,6 +12,19 @@ if (isset($_POST['logout'])) {
    session_destroy();
    header('Location: auth/login.php');
 }
+
+// pin a recipe, currently not working
+if (isset($_POST['pin'])) {
+   pin($_POST['recipeID']);
+}
+
+// unpin a recipe
+if (isset($_POST['unpin'])) {
+   if (!empty($_POST['unpin']) && ($_POST['unpin'] == 'Unpin') && (!isOwnRecipe($_POST['recipeID']))) {
+      unpin($_POST['recipeID']);
+   }
+}
+
 ?>
 
 <!DOCTYPE html>
