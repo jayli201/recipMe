@@ -11,9 +11,11 @@ function cookSignUp($username, $email, $password, $firstName, $lastName, $isCook
     $stmt->execute();
     $stmt->close();
 
+    $expertise = "amateur cook";
+    $cookPinCount = 0;
     // add area of experience
-    $area_stmt = $db->prepare("INSERT INTO areasOfExperience(username, area) VALUES (?, ?)");
-    $area_stmt->bind_param("ss", $username, $area);
+    $area_stmt = $db->prepare("INSERT INTO cookPinCount(username, cookPinCount, expertise, area) VALUES (?, ?, ?, ?)");
+    $area_stmt->bind_param("ssss", $username, $cookPinCount, $expertise, $area);
     $area_stmt->execute();
     $area_stmt->close();
 }
