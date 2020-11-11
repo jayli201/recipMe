@@ -25,6 +25,14 @@ if (isset($_POST['unpin'])) {
    }
 }
 
+$query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "'";
+
+if (isset($_POST['sort'])) {
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND country = '" . $_POST['country'] . "'";
+} elseif (isset($_POST['reset'])) {
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "'";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +60,14 @@ if (isset($_POST['unpin'])) {
    <div>
       <br>
       <h1>All Recipes</h1>
-      <p><?php displaySuggestedRecipes($_SESSION['uname']) ?></p>
+      <form action='' method='post'>
+         <div class='form-group'>
+            <input type='text' placeholder='Sort by country' name='country' id='country' />
+            <button type='submit' name='sort' class='button'>Sort</button>
+            <button type='submit' name='reset' class='button'>Reset</button>
+         </div>
+      </form>
+      <p><?php displaySomeRecipe($query) ?></p>
       <br>
    </div>
 
