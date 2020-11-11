@@ -15,7 +15,7 @@ if (isset($_POST['logout'])) {
 
 // pin a recipe, currently not working
 if (isset($_POST['pin'])) {
-   pin($_POST['recipeID']);
+   pin($_POST['recipeID'], $_POST['cookUsername']);
 }
 
 // unpin a recipe
