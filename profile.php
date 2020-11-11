@@ -49,7 +49,7 @@ function updateFavoriteFood($favoriteFood)
 function updateAreasOfExperience($area)
 {
    global $db;
-   $query = "UPDATE areasOfExperience SET area = ? WHERE username = ?";
+   $query = "UPDATE cookPinCount SET area = ? WHERE username = ?";
    $stmt = $db->prepare($query);
    $stmt->bind_param("ss", $area, $_SESSION['uname']);
    $stmt->execute();
@@ -107,7 +107,8 @@ function displayUserInfo($username)
                while ($row = mysqli_fetch_array($cookResult)) {
                   echo "Cook Pin Count: " . $row['cookPinCount'] . "<br>";
                   echo "Expertise: " . $row['expertise'] . "<br>";
-                  displayAreasOfExperience($username);
+                  echo "Area of Experience: " . $row['area'] . "<br>";
+                  // displayAreasOfExperience($username);
                }
                mysqli_free_result($cookQuery);
             } else {
