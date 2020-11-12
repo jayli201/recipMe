@@ -51,7 +51,8 @@ if (isset($_POST['login'])) {
    <br />
    <form method="post" action="">
       <div>
-         <h1>Login</h1>
+         <h1 class="display-4" style="color: #5cb85c;"><strong>Login</strong></h1>
+         <br>
          <div>
             <input type="text" class="textbox" id="uname" name="uname" placeholder="Username" required />
          </div>
@@ -59,6 +60,7 @@ if (isset($_POST['login'])) {
             <input type="password" class="textbox" id="uname" name="pwd" placeholder="Password" required />
          </div>
          <div style="color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
+         <br>
          <div>
             <button class="btn btn-success" type="submit" value="Login" name="login" id="login">Login</button>
          </div>

@@ -46,7 +46,8 @@ if (isset($_POST['unpin'])) {
 
    <div>
       <br />
-      <h1>Your Pinned Recipes</h1>
+      <h1 class="display-4" style="color: #5cb85c;"><strong>Your Pinned Recipes</strong></h1>
+      <br>
       <p><?php displayPinnedRecipes($_SESSION['uname']) ?></p>
       <br />
    </div>

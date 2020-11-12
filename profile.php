@@ -95,8 +95,8 @@ function displayUserInfo($username)
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = mysqli_fetch_assoc($result)) {
-         echo "Name: " . $row["firstName"] . " " . $row["lastName"] . "<br>";
-         echo "Email: " . $row["email"] . "<br>";
+         echo "<em>Name</em>: " . $row["firstName"] . " " . $row["lastName"] . "<br>";
+         echo "<em>Email</em>: " . $row["email"] . "<br>";
 
          // if cook, also display cookPinCount and expertise
          if ($row["isCook"]) {
@@ -105,9 +105,9 @@ function displayUserInfo($username)
             $cookResult = mysqli_query($db, $cookQuery);
             if (mysqli_num_rows($cookResult) > 0) {
                while ($row = mysqli_fetch_array($cookResult)) {
-                  echo "Cook Pin Count: " . $row['cookPinCount'] . "<br>";
-                  echo "Expertise: " . $row['expertise'] . "<br>";
-                  echo "Area of Experience: " . $row['area'] . "<br>";
+                  echo "<em>Cook Pin Count</em>: " . $row['cookPinCount'] . "<br>";
+                  echo "<em>Expertise</em>: " . $row['expertise'] . "<br>";
+                  echo "<em>Area of Experience</em>: " . $row['area'] . "<br>";
                   // displayAreasOfExperience($username);
                }
                mysqli_free_result($cookQuery);
@@ -123,7 +123,7 @@ function displayUserInfo($username)
             $foodieResult = mysqli_query($db, $foodieQuery);
             if (mysqli_num_rows($foodieResult) > 0) {
                while ($row = mysqli_fetch_array($foodieResult)) {
-                  echo "Favorite Food: " . $row['favoriteFood'];
+                  echo "<em>Favorite Food</em>: " . $row['favoriteFood'];
                }
                mysqli_free_result($foodieQuery);
             } else {
@@ -164,28 +164,30 @@ function displayUserInfo($username)
 
    <div>
       <br />
-      <h1>Welcome back, <?php echo $_SESSION['uname']; ?>!</h1>
+      <h1 class="display-4" style="color: #5cb85c;"><strong>Welcome back, <?php echo $_SESSION['uname']; ?>!</strong></h1>
+      <br>
       <p><?php displayUserInfo($_SESSION['uname']) ?></p>
 
       <!-- display cook info for cooks: submitted recipes, cookPinCount, expertise-->
       <?php if (isCook($_SESSION['uname'])) : ?>
-         <form name="mainForm" action="profile.php" method="post">
-            <div class="form-group">
-               Update Areas of Experience!
-               <input type="text" class="form-control" name="area" required />
-               <input type="submit" value="Confirm update" name="updateAreas" class="button" title="Confirm update area" />
+         <form action="profile.php" method="post">
+            <div>
+               <input type="text" name="area" placeholder='Update your area of experience!' required />
+               <input type="submit" value="Confirm update" name="updateAreas" />
             </div>
          </form>
-         <h2>Your Recipes</h2>
+         <br>
+         <br>
+         <h1 class="display-4" style="color: #5cb85c;"><strong>Your Recipes</strong></h1>
+         <br>
          <?php $recipes = displayAllRecipes($_SESSION['uname']); ?>
 
          <!-- display foodie info for foodies: favoriteFood -->
       <?php else : ?>
-         <form name="mainForm" action="profile.php" method="post">
-            <div class="form-group">
-               Update Your Favorite Food!
-               <input type="text" class="form-control" name="favoriteFood" required />
-               <input type="submit" value="Confirm update" name="update" class="button" title="Confirm update favoriteFood" />
+         <form action="profile.php" method="post">
+            <div>
+               <input type="text" name="favoriteFood" placeholder='Update your favorite food!' required />
+               <input type="submit" value="Confirm update" name="update" />
             </div>
          </form>
       <?php endif; ?>

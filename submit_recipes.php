@@ -59,7 +59,7 @@ if (isset($_POST['action'])) {
 
    <div>
       <br />
-      <h1>Submit a Recipe</h1>
+      <h1 class="display-4" style="color: #5cb85c;"><strong>Submit a Recipe</strong></h1>
    </div>
 
    <form action="" method="post">
@@ -80,7 +80,7 @@ if (isset($_POST['action'])) {
          <input type="text" id="allergen" name="allergen" placeholder="Allergens (eg. Eggs, Milk)" required></input>
       </div>
       <div>
-         <input type="text" id="restriction" name="restriction" placeholder="Dietary Restrictions (eg. Vegan, Gluten Free )" required></input>
+         <input type="text" id="restriction" name="restriction" placeholder="Dietary Restrictions (eg. Vegan, Gluten Free)" required></input>
       </div>
       <div>
          <input type="number" id="instructionCount" name="instructionCount" placeholder="# of Instructions" min="0" required />
@@ -91,14 +91,14 @@ if (isset($_POST['action'])) {
       <div>
          <input type="text" id="country" name="country" placeholder="Country" required />
       </div>
+      <br>
       <div>
          <input type="submit" value="Add" id="action" name="action" />
       </div>
+      <br>
    </form>
 
-   <br></br>
-   <hr>
-   </hr>
+   <br><br><br>
 
    <?php include('footer.html') ?>
 

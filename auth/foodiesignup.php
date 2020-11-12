@@ -4,7 +4,7 @@ require("auth_sql.php");
 
 if (isset($_POST['action'])) {
    if (!empty($_POST['action']) && ($_POST['action'] == 'Sign Up')) {
-      foodieSignUp($_POST['username'], $_POST['email'], $_POST['password'], $_POST['firstName'], $_POST['lastName'], 0, $_POST['favFood']);
+      $error = foodieSignUp($_POST['username'], $_POST['email'], $_POST['password'], $_POST['firstName'], $_POST['lastName'], 0, $_POST['favFood']);
    }
 }
 ?>
@@ -29,7 +29,8 @@ if (isset($_POST['action'])) {
    include('main_header.html');
    ?>
    <br />
-   <h1>Sign Up As a Foodie</h1>
+   <h1 class="display-4" style="color: #5cb85c;"><strong>Sign Up As a Foodie</strong></h1>
+   <br>
    <form action="" method="post">
       <div>
          <input type="text" id="username" name="username" placeholder="Username" required />
@@ -49,8 +50,10 @@ if (isset($_POST['action'])) {
       <div>
          <input type="text" id="favFood" name="favFood" placeholder="Favorite Food" />
       </div>
+      <div style="color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
+      <br>
       <div>
-         <input type="submit" value="Sign Up" id="action" name="action" />
+         <button type="submit" class="btn btn-success" value="Sign Up" id="action" name="action">Sign Up</button>
       </div>
    </form>
    <?php include('../footer.html') ?>
