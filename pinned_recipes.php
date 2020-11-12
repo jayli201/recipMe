@@ -4,13 +4,13 @@ include "display_recipes_sql.php";
 
 // Check if user is logged in or not
 if (!isset($_SESSION['uname'])) {
-   header('Location: auth/login.php');
+   header('Location: auth/welcome.php');
 }
 
 // logout
 if (isset($_POST['logout'])) {
    session_destroy();
-   header('Location: auth/login.php');
+   header('Location: auth/welcome.php');
 }
 
 // unpin a recipe, but only if user is not the cook
@@ -46,7 +46,8 @@ if (isset($_POST['unpin'])) {
 
    <div>
       <br />
-      <h1>Your Pinned Recipes</h1>
+      <h1 class="display-4" style="color: #5cb85c;"><strong>Your Pinned Recipes</strong></h1>
+      <br>
       <p><?php displayPinnedRecipes($_SESSION['uname']) ?></p>
       <br />
    </div>

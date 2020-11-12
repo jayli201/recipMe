@@ -4,13 +4,13 @@ include "display_recipes_sql.php";
 
 // Check if user is logged in or not
 if (!isset($_SESSION['uname'])) {
-   header('Location: auth/login.php');
+   header('Location: auth/welcome.php');
 }
 
 // logout
 if (isset($_POST['logout'])) {
    session_destroy();
-   header('Location: auth/login.php');
+   header('Location: auth/welcome.php');
 }
 
 // pin a recipe, currently not working
@@ -62,15 +62,15 @@ if (isset($_POST['up_and_coming'])) {
 
    <div>
       <br>
-      <h1>All Recipes</h1>
+      <h1 class="display-4" style="color: #5cb85c;"><strong>All Recipes</strong></h1>
       <br />
       <form action='' method='post'>
          <div class='form-group'>
-            <h2>Filter by recipe popularity:</h2>
-            <button type='submit' name='up_and_coming'>Up and Coming</button>
-            <button type='submit' name='rising_star'>Rising Star</button>
-            <button type='submit' name='big_hit'>Big Hit</button>
-            <button type='submit' name='reset'>Reset</button>
+            <h3>Filter by recipe popularity:</h3>
+            <button class="btn btn-success" type='submit' name='up_and_coming'>Up and Coming</button>
+            <button class="btn btn-success" type='submit' name='rising_star'>Rising Star</button>
+            <button class="btn btn-success" type='submit' name='big_hit'>Big Hit</button>
+            <button class="btn btn-danger" id='delete' type='submit' name='reset'>Reset</button>
          </div>
       </form>
       <br />
