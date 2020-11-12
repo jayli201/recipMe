@@ -38,35 +38,35 @@ if (isset($_POST['login'])) {
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <title>Welcome</title>
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
-   <link rel="stylesheet" href="../custom-style.css" />
+   <link rel=" stylesheet" href="../custom-style.css" />
+   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
-<div>
+
+<body>
+   <?php
+   include('main_header.html');
+   ?>
    <br />
-   <h1>Welcome to RecipMe!</h1>
-   <h2>Where anyone can submit their own recipes and explore new recipes</h3>
-      <br />
-      <form method="post" action="">
-         <div>
-            <h1>Login</h1>
-            <div>
-               <input type="text" class="textbox" id="uname" name="uname" placeholder="Username" required />
-            </div>
-            <div>
-               <input type="password" class="textbox" id="uname" name="pwd" placeholder="Password" required />
-            </div>
-            <div style="color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
-            <div>
-               <button type="submit" value="Login" name="login" id="login">Login</button>
-            </div>
-         </div>
-      </form>
-      <br />
-      <h1>Don't have an account yet?</h1>
-      <h2>Sign up as a:</h2>
+   <form method="post" action="">
       <div>
-         <button type="submit" value="Sign Up As a Cook" id="cook" onClick="window.location.href='cooksignup.php'">Cook</button>
-         <button type="submit" value="Sign Up As a Foodie" id="foodie" onClick="window.location.href='foodiesignup.php'">Foodie</button>
+         <h1 class="display-4" style="color: #5cb85c;"><strong>Login</strong></h1>
+         <br>
+         <div>
+            <input type="text" class="textbox" id="uname" name="uname" placeholder="Username" required />
+         </div>
+         <div>
+            <input type="password" class="textbox" id="uname" name="pwd" placeholder="Password" required />
+         </div>
+         <div style="color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
+         <br>
+         <div>
+            <button class="btn btn-success" type="submit" value="Login" name="login" id="login">Login</button>
+         </div>
       </div>
-</div>
+   </form>
+   <?php include('../footer.html') ?>
+</body>
 
 </html>

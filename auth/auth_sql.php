@@ -9,7 +9,7 @@ function cookSignUp($username, $email, $password, $firstName, $lastName, $isCook
     $stmt = $db->prepare("INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $username, $email, $password, $firstName, $lastName, $isCook);
     if (!$stmt->execute()) {
-        echo "Username already taken. Please try again with a new username.";
+        return "Username already taken. Please try again with a new username.";
     } else {
         // add area of experience
         $expertise = "amateur cook";
@@ -36,9 +36,8 @@ function foodieSignUp($username, $email, $password, $firstName, $lastName, $isCo
     $stmt = $db->prepare("INSERT INTO users(username, email, password, firstName, lastName, isCook) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $username, $email, $password, $firstName, $lastName, $isCook);
     if (!$stmt->execute()) {
-        echo "Username already taken. Please try again with a new username.";
+        return "Username already taken. Please try again with a new username.";
     } else {
-        echo "success";
         // add favorite food
         $food_stmt = $db->prepare("INSERT INTO foodies(username, favoriteFood) VALUES (?, ?)");
         $food_stmt->bind_param("ss", $username, $favFood);

@@ -79,7 +79,7 @@ function displayRecipe($recipeID, $cookUsername)
             echo "<form action='profile.php' method='post'>
             <div class='form-group'>
                <input type='hidden' name='recipeID' value='$recipeID'/>
-               <input type='submit' value='Delete' name='delete' class='button' />
+               <button type='submit' id='delete' value='Delete' name='delete'>Delete</button>
             </div>
             </form>";
          }
@@ -88,7 +88,7 @@ function displayRecipe($recipeID, $cookUsername)
          else {
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
-                     <input type='submit' value='Unpin' name='unpin' />
+                     <input type='submit' id='delete' value='Unpin' name='unpin' />
                   </form>
                   <br> <br>";
          }
@@ -114,7 +114,7 @@ function displayExcludedRecipe($recipeID, $cookUsername)
             createRecipeCard($row, $recipeID, $cookUsername);
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
-                     <input type='submit' value='Unpin' name='unpin' />
+                     <input type='submit' id='delete' value='Unpin' name='unpin' />
                   </form>
                   <br> <br>";
          }
@@ -141,7 +141,7 @@ function displaySomeRecipe($query)
          if (isPinned($row['recipeID'])) {
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
-                     <input type='submit' value='Unpin' name='unpin' />
+                     <input type='submit' id='delete' value='Unpin' name='unpin' />
                   </form>
                   <br> <br>";
          } else {
