@@ -28,6 +28,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
    $instructionCount = $row["instructionCount"];
    $instructions = $row["instructions"];
    $cookingTime = $row["cookingTime"];
+   $difficulty = displayDifficulty($recipeID, $cookUsername);
    $categories = displayCategories($recipeID, $cookUsername);
    $allergens = displayAllergens($recipeID, $cookUsername);
    $dietaryRestrictions = displayRestrictions($recipeID, $cookUsername);
@@ -43,6 +44,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
             <em>Ingredients</em>: ' . $ingredients . '<br>
             <em>Number of instructions</em>: ' . $instructionCount  . '<br>
             <em>Instructions</em>: ' . $instructions . '<br>
+            <em>Difficulty</em>: ' . $difficulty . '<br>
             <em>Total cooking time</em>: ' . $cookingTime . '<br>
             <em>Categories</em>: ' . $categories . '<br>
             <em>Allergens</em>: ' . $allergens . '<br>
@@ -216,6 +218,25 @@ function displayAllRecipes($username)
       echo "You haven't submitted any recipes yet!";
    }
    return $result;
+}
+
+function displayDifficulty($recipeID, $cookUsername)
+{
+   global $db;
+   $difficulty = null;
+
+   $query = "SELECT * FROM instructions WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
+   $result = mysqli_query($db, $query);
+
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = $result->fetch_assoc()) {
+         $difficulty = $row["difficulty"];
+      }
+      mysqli_free_result($query);
+   } else {
+      $difficulty .= "There are no categories.";
+   }
+   return $difficulty;
 }
 
 // given a recipeID and the cook's username, display the categories of that recipe
