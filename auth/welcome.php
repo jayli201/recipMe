@@ -19,9 +19,9 @@
     ?>
     <br />
     <div class="welcome">
-        <h1 class="display-1">
-            RecipMe
-        </h1>
+        <h1 class="display-1"><strong>
+                RecipMe
+            </strong></h1>
         <h2> <small class="text-muted">Where anyone can submit their own recipes and explore new recipes</small>
         </h2>
     </div>
