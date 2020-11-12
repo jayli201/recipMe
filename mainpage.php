@@ -67,9 +67,11 @@ if (isset($_POST['up_and_coming'])) {
       <form action='' method='post'>
          <div class='form-group'>
             <h3>Filter by recipe popularity:</h3>
-            <button class="btn btn-success" type='submit' name='up_and_coming'>Up and Coming</button>
-            <button class="btn btn-success" type='submit' name='rising_star'>Rising Star</button>
-            <button class="btn btn-success" type='submit' name='big_hit'>Big Hit</button>
+            <div class='btn-group' style='width: 100%;'>
+               <button class="btn btn-success" type='submit' name='up_and_coming'>Up and Coming</button>
+               <button class="btn btn-success" type='submit' name='rising_star'>Rising Star</button>
+               <button class="btn btn-success" type='submit' name='big_hit'>Big Hit</button>
+            </div>
             <button class="btn btn-danger" id='delete' type='submit' name='reset'>Reset</button>
          </div>
       </form>
