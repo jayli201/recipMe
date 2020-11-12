@@ -1,10 +1,17 @@
-label {
-    display: block;
+.welcome {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #5cb85c;
+}
+
+.copyright {
+    color: black;
 }
 
 input,
-textarea,
-button {
+textarea {
     display: inline-block;
     font-family: arial;
     margin: 5px 10px 5px 40px;
@@ -21,41 +28,40 @@ div {
     width: 60%;
 }
 
-h1 {
-    text-align: center;
-}
-h2 {
+h1, h2 {
     text-align: center;
 }
 
-input[type=submit] {
+/* input[type=submit] {
     background: #ccc;
     border: 0 none;
     cursor: pointer;
     border-radius: 5px;
-}
+} */
 
-input[type=submit]:hover {
+/* input[type=submit]:hover {
     background-color: #ccceee;
-}
+} */
 
-button[type=submit] {
-    padding: 5px 15px;
-    background: #ccc;
+/* button[type=submit] {
     border: 0 none;
     cursor: pointer;
-    /* border-radius: 5px; */
-}
+    background: #5cb85c;
+    color: white;
+    border-radius: 5px;
 
-button[type=submit]:hover {
+    display: inline-block;
+    margin: 5px 10px 5px 40px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 90%;
+} */
+
+/* button[type=submit]:hover {
     background-color: #ccceee;
-}
-
-.msg {
-    margin-left: 40px;
-    font-style: italic;
-    color: red;
-}
+} */
 
 html {
     height: 100%;

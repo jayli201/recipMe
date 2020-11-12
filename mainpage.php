@@ -4,13 +4,13 @@ include "display_recipes_sql.php";
 
 // Check if user is logged in or not
 if (!isset($_SESSION['uname'])) {
-   header('Location: auth/login.php');
+   header('Location: auth/welcome.php');
 }
 
 // logout
 if (isset($_POST['logout'])) {
    session_destroy();
-   header('Location: auth/login.php');
+   header('Location: auth/welcome.php');
 }
 
 // pin a recipe, currently not working
