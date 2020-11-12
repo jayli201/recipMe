@@ -19,6 +19,46 @@ function isCook($username)
    return $result;
 }
 
+function createRecipeCard($row, $recipeID, $cookUsername)
+{
+   $recipeName = $row["recipeName"];
+   $username = $row["username"];
+   $country = $row["country"];
+   $ingredients = displayIngredients($recipeID, $cookUsername);
+   $instructionCount = $row["instructionCount"];
+   $instructions = $row["instructions"];
+   $cookingTime = $row["cookingTime"];
+   $categories = displayCategories($recipeID, $cookUsername);
+   $allergens = displayAllergens($recipeID, $cookUsername);
+   $dietaryRestrictions = displayRestrictions($recipeID, $cookUsername);
+   $recipePopularity = displayRecipePopularity($recipeID, $cookUsername);
+   $recipePinCount = displayRecipePinCount($recipeID, $cookUsername);
+
+   echo '
+      <div class="card" style="width: 100%;">
+         <div class="card-body" style="width: 100%;">
+            <h2 class="card-title">' . $recipeName . '</h2>
+            <h4 class="card-subtitle mb-2 text-muted">By: ' . $username . '</h4>
+            <em>Country</em>: ' . $country . '<br>
+            <em>Ingredients</em>: ' . $ingredients . '<br>
+            <em>Number of instructions</em>: ' . $instructionCount  . '<br>
+            <em>Instructions</em>: ' . $instructions . '<br>
+            <em>Total cooking time</em>: ' . $cookingTime . '<br>
+            <em>Categories</em>: ' . $categories . '<br>
+            <em>Allergens</em>: ' . $allergens . '<br>
+            <em>Dietary restrictions</em>: ' . $dietaryRestrictions . '<br>
+            <em>Popularity</em>: ' . $recipePopularity . '<br>
+            ' . $recipePinCount . ' pins <br>
+            ' . hasAttempted($row["attempted"]) . '<br>
+            
+            <a href="#" class="card-link">Click for more details</a>
+            <a href="#" class="card-link">Click for reviews</a>
+         </div>
+      </div>
+      ';
+}
+
+
 // given a recipeID and the cook's username, display a recipe
 function displayRecipe($recipeID, $cookUsername)
 {
@@ -30,39 +70,7 @@ function displayRecipe($recipeID, $cookUsername)
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
          // display all recipes 
-         echo "<h2>" . $row["recipeName"] . "</h2> <br>";
-         echo "<h4> By: " . $row["username"] . "</h4> <br>";
-         echo "<em>Country</em>: " . $row["country"] . "<br>";
-         echo "<em>Ingredients</em>: ";
-         foreach (displayIngredients($recipeID, $cookUsername) as $ingredient_row) {
-            $ingredient_row;
-         }
-         echo "<br> <em>Number of instructions</em>: " . $row["instructionCount"] . "<br>";
-         echo "<em>Instructions</em>: " . $row["instructions"] . "<br>";
-         echo "<em>Total cooking time</em>: " . $row["cookingTime"] . " minutes " . "<br>";
-         echo "<em>Categories</em>: ";
-         foreach (displayCategories($recipeID, $cookUsername) as $category_row) {
-            $category_row;
-         }
-         echo " <br> <em>Allergens</em>: ";
-         foreach (displayAllergens($recipeID, $cookUsername) as $allergen_row) {
-            $allergen_row;
-         }
-         echo " <br> <em>Dietary restrictions</em>: ";
-         foreach (displayRestrictions($recipeID, $cookUsername) as $restriction_row) {
-            $restriction_row;
-         }
-         echo "<br>";
-         echo "<em>Popularity</em>: ";
-         foreach (displayRecipePopularity($recipeID, $cookUsername) as $popularity_row) {
-            $popularity_row;
-         }
-         echo "<br>";
-         foreach (displayRecipePinCount($recipeID, $cookUsername) as $pin_count_row) {
-            $pin_count_row;
-            echo " pins <br>";
-         }
-         echo hasAttempted($row["attempted"]) . "<br> <br>";
+         createRecipeCard($row, $recipeID, $cookUsername);
 
          // if cook is viewing his own recipe, have option to delete (and no option to unpein)
          if ($row["username"] == $cookUsername) {
@@ -101,39 +109,7 @@ function displayExcludedRecipe($recipeID, $cookUsername)
       while ($row = $result->fetch_assoc()) {
          // display all recipes excluding your own recipes
          if (!isOwnRecipe($row['recipeID'])) {
-            echo "<h2>" . $row["recipeName"] . "</h2> <br>";
-            echo "<h4> By: " . $row["username"] . "</h4> <br>";
-            echo "<em>Country</em>: " . $row["country"] . "<br>";
-            echo "<em>Ingredients</em>: ";
-            foreach (displayIngredients($recipeID, $cookUsername) as $ingredient_row) {
-               $ingredient_row;
-            }
-            echo "<br> <em>Number of instructions</em>: " . $row["instructionCount"] . "<br>";
-            echo "<em>Instructions</em>: " . $row["instructions"] . "<br>";
-            echo "<em>Total cooking time</em>: " . $row["cookingTime"] . " minutes " . "<br>";
-            echo "<em>Categories</em>: ";
-            foreach (displayCategories($recipeID, $cookUsername) as $category_row) {
-               $category_row;
-            }
-            echo " <br> <em>Allergens</em>: ";
-            foreach (displayAllergens($recipeID, $cookUsername) as $allergen_row) {
-               $allergen_row;
-            }
-            echo " <br> <em>Dietary restrictions</em>: ";
-            foreach (displayRestrictions($recipeID, $cookUsername) as $restriction_row) {
-               $restriction_row;
-            }
-            echo "<br>";
-            echo "<em>Popularity</em>: ";
-            foreach (displayRecipePopularity($recipeID, $cookUsername) as $popularity_row) {
-               $popularity_row;
-            }
-            echo "<br>";
-            foreach (displayRecipePinCount($recipeID, $cookUsername) as $pin_count_row) {
-               $pin_count_row;
-               echo " pins <br>";
-            }
-            echo hasAttempted($row["attempted"]) . "<br> <br>";
+            createRecipeCard($row, $recipeID, $cookUsername);
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
                      <input type='submit' value='Unpin' name='unpin' />
@@ -158,39 +134,8 @@ function displaySomeRecipe($query)
          // display all recipes excluding your own recipes
          $recipeID = $row['recipeID'];
          $cookUsername = $row['username'];
-         echo "<h2>" . $row["recipeName"] . "</h2> <br>";
-         echo "<h4> By: " . $row["username"] . "</h4> <br>";
-         echo "<em>Country</em>: " . $row["country"] . "<br>";
-         echo "<em>Ingredients</em>: ";
-         foreach (displayIngredients($recipeID, $cookUsername) as $ingredient_row) {
-            $ingredient_row;
-         }
-         echo "<br> <em>Number of instructions</em>: " . $row["instructionCount"] . "<br>";
-         echo "<em>Instructions</em>: " . $row["instructions"] . "<br>";
-         echo "<em>Total cooking time</em>: " . $row["cookingTime"] . " minutes " . "<br>";
-         echo "<em>Categories</em>: ";
-         foreach (displayCategories($recipeID, $cookUsername) as $category_row) {
-            $category_row;
-         }
-         echo " <br> <em>Allergens</em>: ";
-         foreach (displayAllergens($recipeID, $cookUsername) as $allergen_row) {
-            $allergen_row;
-         }
-         echo " <br> <em>Dietary restrictions</em>: ";
-         foreach (displayRestrictions($recipeID, $cookUsername) as $restriction_row) {
-            $restriction_row;
-         }
-         echo "<br>";
-         echo "<em>Popularity</em>: ";
-         foreach (displayRecipePopularity($recipeID, $cookUsername) as $popularity_row) {
-            $popularity_row;
-         }
-         echo "<br>";
-         foreach (displayRecipePinCount($recipeID, $cookUsername) as $pin_count_row) {
-            $pin_count_row;
-            echo " pins <br>";
-         }
-         echo hasAttempted($row["attempted"]) . "<br> <br>";
+         createRecipeCard($row, $recipeID, $cookUsername);
+
          if (isPinned($row['recipeID'])) {
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
@@ -277,110 +222,116 @@ function displayAllRecipes($username)
 function displayCategories($recipeID, $cookUsername)
 {
    global $db;
+   $categories = null;
 
    $query = "SELECT * FROM categories WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         echo " | " . $row["category"];
+         $categories .= " | " . $row["category"];
       }
       mysqli_free_result($query);
    } else {
-      echo "There are no categories.";
+      $categories .= "There are no categories.";
    }
-   return $result;
+   return $categories;
 }
 
 // given a recipeID and the cook's username, display the ingredients of that recipe
 function displayIngredients($recipeID, $cookUsername)
 {
    global $db;
+   $ingredients = null;
 
    $query = "SELECT * FROM ingredients WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         echo " | " . $row["ingredient"];
+         $ingredients .= " | " . $row["ingredient"];
       }
       mysqli_free_result($query);
    } else {
-      echo "There are no ingredients.";
+      $ingredients .= "There are no ingredients.";
    }
-   return $result;
+   return $ingredients;
 }
 
 // given a recipeID and the cook's username, display the allergens of that recipe
 function displayAllergens($recipeID, $cookUsername)
 {
    global $db;
+   $allergens = null;
 
    $query = "SELECT * FROM allergens WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         echo " | " . $row["allergen"];
+         $allergens .= " | " . $row["allergen"];
       }
       mysqli_free_result($query);
    } else {
-      echo "There are no allergens.";
+      $allergens .= "There are no allergens.";
    }
-   return $result;
+   return $allergens;
 }
 
 // given a recipeID and the cook's username, display the dietary restrictions of that recipe
 function displayRestrictions($recipeID, $cookUsername)
 {
    global $db;
+   $dietaryRestrictions = null;
 
    $query = "SELECT * FROM dietaryRestrictions WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         echo " | " . $row["restriction"];
+         $dietaryRestrictions .= " | " . $row["restriction"];
       }
       mysqli_free_result($query);
    } else {
-      echo "There are no dietary restrictions.";
+      $dietaryRestrictions .= "There are no dietary restrictions.";
    }
-   return $result;
+   return $dietaryRestrictions;
 }
 
 // given a recipeID and the cook's username, display the recipe's popularity
 function displayRecipePopularity($recipeID, $cookUsername)
 {
    global $db;
+   $recipePopularity = null;
 
    $query = "SELECT popularity FROM recipePinCount WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         echo $row["popularity"];
+         $recipePopularity .= $row["popularity"];
       }
       mysqli_free_result($query);
    }
-   return $result;
+   return $recipePopularity;
 }
 
 // given a recipeID and the cook's username, display the recipe's pin count
 function displayRecipePinCount($recipeID, $cookUsername)
 {
    global $db;
+   $recipePinCount = null;
 
    $query = "SELECT recipePinCount FROM recipePinCount WHERE recipeID = '" . $recipeID . "' AND username = '" . $cookUsername . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         echo $row["recipePinCount"];
+         $recipePinCount .= $row["recipePinCount"];
       }
       mysqli_free_result($query);
    }
-   return $result;
+   return $recipePinCount;
 }
 
 // check if a user trying to unpin a recipe is actually the cook who submitted the recipe
