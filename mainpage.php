@@ -25,11 +25,14 @@ if (isset($_POST['unpin'])) {
    }
 }
 
-$query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "'";
-
-if (isset($_POST['sort'])) {
-   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND country = '" . $_POST['country'] . "'";
-} elseif (isset($_POST['reset'])) {
+// sort by recipe popularity
+if (isset($_POST['up_and_coming'])) {
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 0 AND 10";
+} elseif (isset($_POST['rising_star'])) {
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 11 AND 20";
+} elseif (isset($_POST['big_hit'])) {
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount > 20";
+} else {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "'";
 }
 
@@ -60,14 +63,19 @@ if (isset($_POST['sort'])) {
    <div>
       <br>
       <h1>All Recipes</h1>
+      <br />
       <form action='' method='post'>
          <div class='form-group'>
-            <input type='text' placeholder='Sort by country' name='country' id='country' />
-            <button type='submit' name='sort' class='button'>Sort</button>
-            <button type='submit' name='reset' class='button'>Reset</button>
+            <h2>Filter by recipe popularity:</h2>
+            <button type='submit' name='up_and_coming'>Up and Coming</button>
+            <button type='submit' name='rising_star'>Rising Star</button>
+            <button type='submit' name='big_hit'>Big Hit</button>
+            <button type='submit' name='reset'>Reset</button>
          </div>
       </form>
+      <br />
       <p><?php displaySomeRecipe($query) ?></p>
+      <br>
       <br>
    </div>
 
