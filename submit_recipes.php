@@ -83,10 +83,10 @@ if (isset($_POST['action'])) {
          <input type="text" id="restriction" name="restriction" placeholder="Dietary Restrictions (eg. Vegan, Gluten Free)" required></input>
       </div>
       <div>
-         <input type="number" id="instructionCount" name="instructionCount" placeholder="# of Instructions" min="0" required />
+         <input type="number" id="instructionCount" name="instructionCount" placeholder="# of Instructions" min="1" required />
       </div>
       <div>
-         <input type="number" id="cookingTime" name="cookingTime" placeholder="Total Time (mins)" min="0" required />
+         <input type="number" id="cookingTime" name="cookingTime" placeholder="Total Time (mins)" min="1" required />
       </div>
       <div>
          <input type="text" id="country" name="country" placeholder="Country" required />
