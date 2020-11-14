@@ -31,14 +31,14 @@ function displayReviews($recipeID, $cookUsername)
   if (mysqli_num_rows($result) > 0) {
     while ($row = $result->fetch_assoc()) {
       // display all reviews 
-      $username = $row["username"];
       $review = $row["reviews"];
+      $reviewerUsername = $row["reviewerUsername"];
 
       echo '
           <div class="card" style="width: 100%;">
             <div class="card-body" style="width: 100%;">
-                <h4 class="card-subtitle mb-2 text-muted">By: ' . $username . '</h4>
-                <em>Review</em>: ' . $review . '<br>
+                <h4 class="card-subtitle mb-2 text-muted">Review by: ' . $reviewerUsername . '</h4>
+                ' . $review . '<br>
 
             </div>
           </div>
