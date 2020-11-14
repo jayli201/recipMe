@@ -37,9 +37,12 @@ if (isset($_POST['logout'])) {
   ?>
 
   <div>
+    <br>
     <?php
     $recipeID = htmlspecialchars($_GET['recipeID']);
     $cookID = htmlspecialchars($_GET['cookID']);
+    $_SESSION['recipeID'] = htmlspecialchars(($_GET['recipeID']));
+    $_SESSION['cookID'] = htmlspecialchars(($_GET['cookID']));
     ?>
     <form action='submit_review.php?recipeID=<?php echo $recipeID; ?>&cookID=<?php echo $cookID; ?>' method='post'>
       <div class='form-group'>

@@ -21,8 +21,6 @@ if (isset($_POST['action'])) {
       $recipeID = htmlspecialchars($_GET['recipeID']);
       $cookID = htmlspecialchars($_GET['cookID']);
       addReview($recipeID, $cookID, $_POST['comment'], $_SESSION['uname']);
-      //stay on the submit review page
-      // header('Location: submit_review.php');
    }
 }
 
@@ -67,19 +65,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    ?>
 
    <div>
-      <h1>Leave your review</h1>
+      <br />
+      <h1 class="display-4" style="color: #5cb85c;"><strong>Leave your review</strong></h1>
 
       <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
 
          <label>Comment: </label>
          <textarea rows="5" cols="40" name="comment" <?php if (empty($_POST['comment'])) { ?> autofocus <?php } ?>><?php if (isset($_POST['comment'])) echo $_POST['comment'] ?></textarea>
-         <span class="msg"><?php if (empty($_POST['comment'])) echo $comment_msg ?></span>
+         <br>
+         <span style="color:#cc0000;" class="msg"><?php if (empty($_POST['comment'])) echo $comment_msg ?></span>
          <br />
 
          <input type="submit" value="Submit" id="action" name="action" />
       </form>
 
-
+      <?php
+      $recipeID = $_SESSION['recipeID'];
+      $cookID = $_SESSION['cookID'];
+      ?>
+      <input type="submit" value="Go back to <?php echo $cookID; ?>'s reviews" onClick="window.location.href='reviews.php?recipeID=<?php echo $recipeID; ?>&cookID=<?php echo $cookID; ?>'" />
       <?php
       if ($comment != NULL) {
          echo "<br/><hr/><br/>";
@@ -88,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
          $confirm = "Thanks for this comment, " . $_SESSION['uname'] . "\n";
          $confirm .= "$comment \n";
+         header("Location: reviews.php?recipeID=" . $recipeID . "&cookID=" . $cookID);
       }
       ?>
    </div>
@@ -97,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
    <?php include('footer.html') ?>
-   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+   <script src=" https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
