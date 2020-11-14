@@ -86,7 +86,7 @@ if (isset($_POST['action'])) {
          <input type="number" id="instructionCount" name="instructionCount" placeholder="# of Instructions" min="0" required />
       </div>
       <div>
-         <input type="number" id="cookingTime" name="cookingTime" placeholder="Total Time" min="0" required />
+         <input type="number" id="cookingTime" name="cookingTime" placeholder="Total Time (mins)" min="0" required />
       </div>
       <div>
          <input type="text" id="country" name="country" placeholder="Country" required />

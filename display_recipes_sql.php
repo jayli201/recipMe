@@ -37,7 +37,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
    $recipePinCount = displayRecipePinCount($recipeID, $cookUsername);
 
    echo '
-      <div class="card" style="width: 100%;">
+      <div class="card" style="width: 100%; border-color: #5cb85c">
          <div class="card-body" style="width: 100%;">
             <h2 class="card-title">' . $recipeName . '</h2>
             <h4 class="card-subtitle mb-2 text-muted">By: ' . $username . '</h4>
@@ -54,8 +54,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
             ' . $recipePinCount . ' pins <br>
             ' . hasAttempted($row["attempted"]) . '<br>
 
-            <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click for more details</a>
-            <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click for reviews</a>
+            <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click to see reviews</a>
          </div>
       </div>
       ';

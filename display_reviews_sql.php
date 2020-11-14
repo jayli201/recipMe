@@ -35,16 +35,26 @@ function displayReviews($recipeID, $cookUsername)
       $reviewerUsername = $row["reviewerUsername"];
 
       echo '
-          <div class="card" style="width: 100%;">
+          <div class="card" style="width: 100%; border-color: #5cb85c">
             <div class="card-body" style="width: 100%;">
                 <h4 class="card-subtitle mb-2 text-muted">Review by: ' . $reviewerUsername . '</h4>
                 ' . $review . '<br>
-
             </div>
           </div>
+          <br>
       ';
     }
     mysqli_free_result($query);
   }
   return $result;
+}
+
+function addReview($recipeID, $cookUsername, $review, $reviewerUsername)
+{
+  global $db;
+  // add review into db
+  $stamt = $db->prepare("INSERT INTO reviews(recipeID, username, reviews, reviewerUsername) VALUES (?, ?, ?, ?)");
+  $stamt->bind_param("ssss", $recipeID, $cookUsername, $review, $reviewerUsername);
+  $stamt->execute();
+  $stamt->close();
 }
