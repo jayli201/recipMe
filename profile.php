@@ -34,6 +34,13 @@ elseif (isset($_POST['delete'])) {
    }
 }
 
+// delete a review
+elseif (isset($_POST['deleteReview'])) {
+   if (!empty($_POST['deleteReview']) && ($_POST['deleteReview'] == 'Delete')) {
+      deleteReview($_POST['recipeID'], $_POST['cookUsername'], $_POST['review'], $_SESSION['uname']);
+   }
+}
+
 // foodies can update their favorite food
 function updateFavoriteFood($favoriteFood)
 {
@@ -85,6 +92,66 @@ function displayAreasOfExperience($username)
    return $result;
 }
 
+function displayOwnReviews($username)
+{
+   global $db;
+
+   // get all the reviews from this user
+   $query = "SELECT * FROM reviews WHERE reviewerUsername = '" . $username . "'";
+   $result = mysqli_query($db, $query);
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_assoc($result)) {
+
+         // get the info of the review, including recipe name
+         $recipeQuery =
+            "SELECT * FROM reviews, recipes WHERE reviews.recipeID = recipes.recipeID AND reviews.reviewerUsername = '" . $username . "'";
+
+         $result = mysqli_query($db, $recipeQuery);
+         if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+               $cookUsername = $row['username'];
+               $review = $row['reviews'];
+               $recipeName = $row['recipeName'];
+               $recipeID = $row['recipeID'];
+               $reviewerUsername = $row['reviewerUsername'];
+               echo '
+               <div class="card" style="width: 60%; border-color: #5cb85c">
+                  <div class="card-body" style="width: 100%;">
+                     <h4 class="card-subtitle mb-2 text-muted">Review for: ' . $cookUsername . '\'s ' . $recipeName  . '</h4>
+                     ' . $review . '<br>
+                  </div>
+               </div>
+               ';
+               echo "<form action='' method='post'>
+                  <div class='form-group'>
+                     <input type='hidden' name='recipeID' value='$recipeID'/>
+                     <input type='hidden' name='review' value='$review'/>
+                     <input type='hidden' name='cookUsername' value='$cookUsername'/>
+                     <input type='submit' id='delete' value='Delete' name='deleteReview'></input>
+                  </div>
+               </form>";
+            }
+         }
+      }
+      mysqli_free_result($query);
+   } else {
+      echo "<em>You have not submitted any reviews yet!</em>";
+   }
+   return $result;
+}
+
+function deleteReview($recipeID, $cookUsername, $review, $reviewerUsername)
+{
+   // delete review from db
+   global $db;
+   $query = "DELETE FROM reviews WHERE recipeID = ? AND username = ? AND reviews = ? AND reviewerUsername = ?";
+   $stmt = $db->prepare($query);
+   $stmt->bind_param("ssss", $recipeID, $cookUsername, $review, $reviewerUsername);
+   $stmt->execute();
+   $stmt->close();
+}
+
+
 // displays all user information, differentiating between cooks and foodies
 function displayUserInfo($username)
 {
@@ -97,7 +164,6 @@ function displayUserInfo($username)
       while ($row = mysqli_fetch_assoc($result)) {
          echo "<em>Name</em>: " . $row["firstName"] . " " . $row["lastName"] . "<br>";
          echo "<em>Email</em>: " . $row["email"] . "<br>";
-
          // if cook, also display cookPinCount and expertise
          if ($row["isCook"]) {
             $cookQuery =
@@ -191,6 +257,13 @@ function displayUserInfo($username)
             </div>
          </form>
       <?php endif; ?>
+      </br>
+      </br>
+
+      <h1 class="display-4" style="color: #5cb85c;"><strong>Your Reviews</strong></h1>
+
+      </br>
+      <?php displayOwnReviews($_SESSION['uname']); ?>
 
    </div>
 
