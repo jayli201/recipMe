@@ -1,5 +1,6 @@
 <?php
 include "connectdb.php";
+// include "display_reviews_sql.php";
 
 // given session username, determines if the user is a cook
 // can also use the $_SESSION['isCook'] 
@@ -52,9 +53,9 @@ function createRecipeCard($row, $recipeID, $cookUsername)
             <em>Popularity</em>: ' . $recipePopularity . '<br>
             ' . $recipePinCount . ' pins <br>
             ' . hasAttempted($row["attempted"]) . '<br>
-            
-            <a href="#" class="card-link">Click for more details</a>
-            <a href="#" class="card-link">Click for reviews</a>
+
+            <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click for more details</a>
+            <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click for reviews</a>
          </div>
       </div>
       ';
