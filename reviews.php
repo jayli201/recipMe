@@ -42,12 +42,8 @@ if (isset($_POST['logout'])) {
     $cookID = htmlspecialchars($_GET['cookID']);
     ?>
     <form action='submit_review.php?recipeID=<?php echo $recipeID; ?>&cookID=<?php echo $cookID; ?>'>
-      <!-- <form action="submit_review.php?recipeID=<?php echo $recipeID; ?>&cookID=<?php echo $cookID; ?>"><input type="submit" value="Submit a Review" /> -->
-
       <div class='form-group'>
         <h3 class="display-4" style="color: #5cb85c;"><strong><?php echo "Reviews for " . $cookID . "'s " . findRecipeName($recipeID) . ""; ?></strong></h3>
-        <!-- <a href="submit_review.php?recipeID=<?php echo $recipeID; ?>&cookID=<?php echo $cookID; ?>" class="card-link">Submit a review</a> -->
-
         <form action=""><input type="submit" value="Submit a Review" /></form>
       </div>
     </form>

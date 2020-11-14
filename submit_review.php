@@ -26,18 +26,10 @@ if (isset($_POST['action'])) {
    }
 }
 
-$name = $comment = NULL;
-$name_msg = $comment_msg = NULL;
+$comment = NULL;
+$comment_msg = NULL;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-   if (empty($_POST['name']))
-      $name_msg = "<em>Please enter your name</em> <br />";
-   else {
-      $name = trim($_POST['name']);
-      // You may reset $name_msg and use it to determine
-      // when to display an error message  
-      // $name_msg = "";     
-   }
 
    if (empty($_POST['comment']))
       $comment_msg = "<em>Please enter comment </em> <br />";
@@ -78,14 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <h1>Leave your review</h1>
 
       <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
-         <label>Name: </label>
-         <input type="text" name="name" value="<?php if (isset($_POST['name'])) echo $_POST['name'] ?>" <?php if (empty($_POST['name'])) { ?> autofocus <?php } ?> />
-         <span class="msg"><?php if (empty($_POST['name'])) echo $name_msg ?></span>
-         <!-- Alternatively, we can check if the error message has something to be displayed -->
-         <!-- <span class="msg"><?php if ($name_msg != "") echo $name_msg ?></span> -->
 
-         <br />
-         <br />
          <label>Comment: </label>
          <textarea rows="5" cols="40" name="comment" <?php if (empty($_POST['comment'])) { ?> autofocus <?php } ?>><?php if (isset($_POST['comment'])) echo $_POST['comment'] ?></textarea>
          <span class="msg"><?php if (empty($_POST['comment'])) echo $comment_msg ?></span>
@@ -96,12 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
       <?php
-      if ($name != NULL && $comment != NULL) {
+      if ($comment != NULL) {
          echo "<br/><hr/><br/>";
-         echo "Thanks for this comment, $name <br />";
+         echo "Thanks for this comment, " . $_SESSION['uname'] . " <br />";
          echo "<i>$comment</i> <br />";
 
-         $confirm = "Thanks for this comment, $name \n";
+         $confirm = "Thanks for this comment, " . $_SESSION['uname'] . "\n";
          $confirm .= "$comment \n";
       }
       ?>

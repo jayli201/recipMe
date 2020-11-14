@@ -17,7 +17,7 @@ function findRecipeName($recipeID)
     }
     mysqli_free_result($result);
   } else {
-    echo "0 results from displayReviews()";
+    echo "0 results from findRecipeName()";
   }
   return $recipeName;
 }
@@ -31,6 +31,7 @@ function displayReviews($recipeID, $cookUsername)
   if (mysqli_num_rows($result) > 0) {
     while ($row = $result->fetch_assoc()) {
       // display all reviews 
+
       $review = $row["reviews"];
       $reviewerUsername = $row["reviewerUsername"];
 
@@ -45,6 +46,8 @@ function displayReviews($recipeID, $cookUsername)
       ';
     }
     mysqli_free_result($query);
+  } else {
+    echo "There are currently no reviews for this recipe!";
   }
   return $result;
 }
