@@ -1,5 +1,6 @@
 <?php
 include "connectdb.php";
+// include "display_reviews_sql.php";
 
 // given session username, determines if the user is a cook
 // can also use the $_SESSION['isCook'] 
@@ -36,7 +37,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
    $recipePinCount = displayRecipePinCount($recipeID, $cookUsername);
 
    echo '
-      <div class="card" style="width: 100%;">
+      <div class="card" style="width: 100%; border-color: #5cb85c">
          <div class="card-body" style="width: 100%;">
             <h2 class="card-title">' . $recipeName . '</h2>
             <h4 class="card-subtitle mb-2 text-muted">By: ' . $username . '</h4>
@@ -52,14 +53,19 @@ function createRecipeCard($row, $recipeID, $cookUsername)
             <em>Popularity</em>: ' . $recipePopularity . '<br>
             ' . $recipePinCount . ' pins <br>
             ' . hasAttempted($row["attempted"]) . '<br>
-            
-            <a href="#" class="card-link">Click for more details</a>
-            <a href="#" class="card-link">Click for reviews</a>
+
+            <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click to see reviews</a>
          </div>
       </div>
       ';
 }
 
+// tried adding this instead of href, doesn't work
+// <form action="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '">
+//    <div class="form-group">
+//    <form action=""><input type="submit" value="Click to see reviews" /></form>
+//    </div>
+// </form>
 
 // given a recipeID and the cook's username, display a recipe
 function displayRecipe($recipeID, $cookUsername)
