@@ -154,7 +154,7 @@ function displaySomeRecipe($query)
                echo "<form action='' method='post'>
                   <input type='hidden' name='recipeID' value='$recipeID'/>
                   <input type='hidden' name='cookUsername' value='$cookUsername'/>
-                  <input type='submit' id='delete' value='I have not tried out this recipe.' name='attempted' />
+                  <input type='submit' id='delete' value='Actually, I have not tried out this recipe.' name='attempted' />
                </form>";
             }
             echo "<form action='' method='post'>
