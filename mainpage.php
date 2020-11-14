@@ -25,6 +25,18 @@ if (isset($_POST['unpin'])) {
    }
 }
 
+if (isset($_POST['not_attempted'])) {
+   if (!empty($_POST['not_attempted']) && ($_POST['not_attempted'] == 'I have finally tried out this recipe!')) {
+      updateAttempted(1, $_POST['recipeID'], $_POST['cookUsername']);
+   }
+}
+
+if (isset($_POST['attempted'])) {
+   if (!empty($_POST['attempted']) && ($_POST['attempted'] == 'I have not tried out this recipe.')) {
+      updateAttempted(0, $_POST['recipeID'], $_POST['cookUsername']);
+   }
+}
+
 // sort by recipe popularity
 if (isset($_POST['up_and_coming'])) {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 0 AND 10";

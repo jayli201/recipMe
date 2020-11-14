@@ -2,24 +2,6 @@
 include "connectdb.php";
 // include "display_reviews_sql.php";
 
-// given session username, determines if the user is a cook
-// can also use the $_SESSION['isCook'] 
-function isCook($username)
-{
-   global $db;
-   $query = "SELECT isCook FROM users WHERE username = '" . $username . "'";
-   $result = mysqli_query($db, $query);
-   if (mysqli_num_rows($result) > 0) {
-      while ($row = mysqli_fetch_assoc($result)) {
-         return ($row["isCook"]);
-      }
-      mysqli_free_result($query);
-   } else {
-      echo "0 results from isCook";
-   }
-   return $result;
-}
-
 function createRecipeCard($row, $recipeID, $cookUsername)
 {
    $recipeName = $row["recipeName"];
@@ -35,6 +17,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
    $dietaryRestrictions = displayRestrictions($recipeID, $cookUsername);
    $recipePopularity = displayRecipePopularity($recipeID, $cookUsername);
    $recipePinCount = displayRecipePinCount($recipeID, $cookUsername);
+   $attempted = hasAttemptedRecipe($recipeID, $cookUsername);
 
    echo '
       <div class="card" style="width: 100%; border-color: #5cb85c">
@@ -52,7 +35,7 @@ function createRecipeCard($row, $recipeID, $cookUsername)
             <em>Dietary restrictions</em>: ' . $dietaryRestrictions . '<br>
             <em>Popularity</em>: ' . $recipePopularity . '<br>
             ' . $recipePinCount . ' pins <br>
-            ' . hasAttempted($row["attempted"]) . '<br>
+            ' . hasAttempted($attempted) . '<br>
 
             <a href="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '" class="card-link">Click to see reviews</a>
          </div>
@@ -118,6 +101,21 @@ function displayExcludedRecipe($recipeID, $cookUsername)
          // display all recipes excluding your own recipes
          if (!isOwnRecipe($row['recipeID'])) {
             createRecipeCard($row, $recipeID, $cookUsername);
+
+            // option to mark if recipe has been attempted or not
+            if (hasAttemptedRecipe($recipeID, $cookUsername) == 0) {
+               echo "<form action='' method='post'>
+                  <input type='hidden' name='recipeID' value='$recipeID'/>
+                  <input type='hidden' name='cookUsername' value='$cookUsername'/>
+                  <input type='submit' value='I have finally tried out this recipe!' name='not_attempted' />
+               </form>";
+            } else {
+               echo "<form action='' method='post'>
+                  <input type='hidden' name='recipeID' value='$recipeID'/>
+                  <input type='hidden' name='cookUsername' value='$cookUsername'/>
+                  <input type='submit' id='delete' value='Actually, I have not tried out this recipe.' name='attempted' />
+               </form>";
+            }
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
                      <input type='submit' id='delete' value='Unpin' name='unpin' />
@@ -145,6 +143,20 @@ function displaySomeRecipe($query)
          createRecipeCard($row, $recipeID, $cookUsername);
 
          if (isPinned($row['recipeID'])) {
+            // option to mark if recipe has been attempted or not
+            if (hasAttemptedRecipe($recipeID, $cookUsername) == 0) {
+               echo "<form action='' method='post'>
+                  <input type='hidden' name='recipeID' value='$recipeID'/>
+                  <input type='hidden' name='cookUsername' value='$cookUsername'/>
+                  <input type='submit' value='I have finally tried out this recipe!' name='not_attempted' />
+               </form>";
+            } else {
+               echo "<form action='' method='post'>
+                  <input type='hidden' name='recipeID' value='$recipeID'/>
+                  <input type='hidden' name='cookUsername' value='$cookUsername'/>
+                  <input type='submit' id='delete' value='I have not tried out this recipe.' name='attempted' />
+               </form>";
+            }
             echo "<form action='' method='post'>
                      <input type='hidden' name='recipeID' value='$recipeID'/>
                      <input type='submit' id='delete' value='Unpin' name='unpin' />
@@ -166,12 +178,10 @@ function displaySomeRecipe($query)
    return $result;
 }
 
-// given the session's username, display your pinned recipes, excluding your own recipes
-function displayPinnedRecipes($username)
+function displayPinnedRecipes($query)
 {
    global $db;
 
-   $query = "SELECT * FROM pin WHERE username = '" . $username . "'";
    $result = mysqli_query($db, $query);
 
    if (mysqli_num_rows($result) > 0) {
@@ -381,6 +391,25 @@ function isOwnRecipe($recipeID)
    }
 }
 
+
+// given session username, determines if the user is a cook
+// can also use the $_SESSION['isCook'] 
+function isCook($username)
+{
+   global $db;
+   $query = "SELECT isCook FROM users WHERE username = '" . $username . "'";
+   $result = mysqli_query($db, $query);
+   if (mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_assoc($result)) {
+         return ($row["isCook"]);
+      }
+      mysqli_free_result($query);
+   } else {
+      echo "0 results from isCook";
+   }
+   return $result;
+}
+
 // checks if pinnned
 function isPinned($recipeID)
 {
@@ -425,8 +454,29 @@ function unpin($recipeID)
 function hasAttempted($attempted)
 {
    if ($attempted == 0) {
-      return "<em>You have not attempted this recipe yet.</em>";
+      return "<em>You have not tried this recipe yet.</em>";
    } else {
-      return "<em>You have attempted this recipe!</em>";
+      return "<em>You have tried this recipe!</em>";
    }
+}
+
+// check if a certain user has attempted a recipe yet
+function hasAttemptedRecipe($recipeID, $cookUsername)
+{
+   global $db;
+   $attempted_query = "SELECT attempted FROM pin WHERE recipeID = '" . $recipeID . "' AND username = '" . $_SESSION['uname'] . "' AND cookUsername = '" . $cookUsername . "'";
+   $result = mysqli_query($db, $attempted_query);
+   $attempted_row = $result->fetch_assoc();
+   return $attempted_row['attempted'];
+}
+
+// update attempted in pin table
+function updateAttempted($attempted, $recipeID, $cookUsername)
+{
+   global $db;
+   $query = "UPDATE pin SET attempted = ? WHERE recipeID = ? AND cookUsername = ? AND username = ?";
+   $stmt = $db->prepare($query);
+   $stmt->bind_param("ssss", $attempted, $recipeID, $cookUsername, $_SESSION['uname']);
+   $stmt->execute();
+   $stmt->close();
 }
