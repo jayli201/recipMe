@@ -15,13 +15,14 @@ if (isset($_POST['logout'])) {
 
 ?>
 
+<!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- required to handle IE -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RecipMe</title>
+  <title>Reviews</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
   <link rel="stylesheet" href="custom-style.css" />
 </head>
@@ -46,8 +47,8 @@ if (isset($_POST['logout'])) {
     ?>
     <form action='submit_review.php?recipeID=<?php echo $recipeID; ?>&cookID=<?php echo $cookID; ?>' method='post'>
       <div class='form-group'>
-        <h3 class="display-4" style="color: #5cb85c;"><strong><?php echo "Reviews for " . $cookID . "'s " . findRecipeName($recipeID) . ""; ?></strong></h3>
-        <form action=""><input type="submit" value="Submit a Review" /></form>
+        <h1 class="display-4" style="color: #5cb85c;"><strong><?php echo "Reviews for " . $cookID . "'s " . findRecipeName($recipeID) . ""; ?></strong></h1>
+        <input type="submit" value="Submit a Review" />
       </div>
     </form>
     <br />
