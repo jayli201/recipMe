@@ -8,6 +8,12 @@
 
 .copyright {
     color: black;
+    float: left;
+}
+
+.names {
+    color: black;
+    float: right;
 }
 
 input, textarea {
