@@ -27,7 +27,7 @@ if (isset($_POST['not_attempted'])) {
 }
 
 if (isset($_POST['attempted'])) {
-   if (!empty($_POST['attempted']) && ($_POST['attempted'] == 'I have not tried out this recipe.')) {
+   if (!empty($_POST['attempted']) && ($_POST['attempted'] == 'Actually, I have not tried out this recipe.')) {
       updateAttempted(0, $_POST['recipeID'], $_POST['cookUsername']);
    }
 }
