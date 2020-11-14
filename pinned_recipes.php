@@ -20,6 +20,27 @@ if (isset($_POST['unpin'])) {
    }
 }
 
+if (isset($_POST['not_attempted'])) {
+   if (!empty($_POST['not_attempted']) && ($_POST['not_attempted'] == 'I have finally tried out this recipe!')) {
+      updateAttempted(1, $_POST['recipeID'], $_POST['cookUsername']);
+   }
+}
+
+if (isset($_POST['attempted'])) {
+   if (!empty($_POST['attempted']) && ($_POST['attempted'] == 'I have not tried out this recipe.')) {
+      updateAttempted(0, $_POST['recipeID'], $_POST['cookUsername']);
+   }
+}
+
+// sort by recipe attempted
+if (isset($_POST['attempted'])) {
+   $query = "SELECT * FROM pin WHERE username = '" . $_SESSION['uname'] . "' AND attempted = 1";
+} elseif (isset($_POST['not_attempted'])) {
+   $query = "SELECT * FROM pin WHERE username = '" . $_SESSION['uname'] . "' AND attempted = 0";
+} else {
+   $query = "SELECT * FROM pin WHERE username = '" . $_SESSION['uname'] . "'";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +69,18 @@ if (isset($_POST['unpin'])) {
       <br />
       <h1 class="display-4" style="color: #5cb85c;"><strong>Your Pinned Recipes</strong></h1>
       <br>
-      <p><?php displayPinnedRecipes($_SESSION['uname']) ?></p>
+      <form action='' method='post'>
+         <div class='form-group'>
+            <h3>Filter by which recipes you've tried:</h3>
+            <div class='btn-group' style='width: 100%;'>
+               <button class="btn btn-success" type='submit' name='attempted'>Have tried!</button>
+               <button class="btn btn-success" type='submit' name='not_attempted'>Have not tried</button>
+            </div>
+            <button class="btn btn-danger" id='delete' type='submit' name='reset'>Reset</button>
+         </div>
+      </form>
+      <br>
+      <p><?php displayPinnedRecipes($query) ?></p>
       <br />
    </div>
 
