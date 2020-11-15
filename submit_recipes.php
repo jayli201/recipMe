@@ -74,13 +74,13 @@ if (isset($_POST['action'])) {
          <textarea type="text" id="ingredient" name="ingredient" placeholder="Ingredients (eg. Salt, Pepper, Chicken)" required></textarea>
       </div>
       <div>
-         <input type="text" id="category" name="category" placeholder="Categories (eg. Breakfast, Side Dish)" required></input>
+         <input type="text" id="category" name="category" placeholder="Categories (eg. Breakfast, Side Dish)"></input>
       </div>
       <div>
-         <input type="text" id="allergen" name="allergen" placeholder="Allergens (eg. Eggs, Milk)" required></input>
+         <input type="text" id="allergen" name="allergen" placeholder="Allergens (eg. Eggs, Milk)"></input>
       </div>
       <div>
-         <input type="text" id="restriction" name="restriction" placeholder="Dietary Restrictions (eg. Vegan, Gluten Free)" required></input>
+         <input type="text" id="restriction" name="restriction" placeholder="Dietary Restrictions (eg. Vegan, Gluten Free)"></input>
       </div>
       <div>
          <input type="number" id="instructionCount" name="instructionCount" placeholder="# of Instructions" min="1" required />

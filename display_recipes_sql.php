@@ -215,7 +215,7 @@ function displayAllRecipes($username)
       }
       mysqli_free_result($query);
    } else {
-      echo "You haven't submitted any recipes yet!";
+      echo "<em>You have not submitted any recipes yet!</em>";
    }
    return $result;
 }
@@ -250,7 +250,11 @@ function displayCategories($recipeID, $cookUsername)
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         $categories .= " | " . $row["category"];
+         if ($row["category"]) {
+            $categories .= " | " . $row["category"];
+         } else {
+            $categories .= "N/A";
+         }
       }
       mysqli_free_result($query);
    } else {
@@ -290,7 +294,11 @@ function displayAllergens($recipeID, $cookUsername)
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         $allergens .= " | " . $row["allergen"];
+         if ($row["allergen"]) {
+            $allergens .= " | " . $row["allergen"];
+         } else {
+            $allergens .= "N/A";
+         }
       }
       mysqli_free_result($query);
    } else {
@@ -310,7 +318,11 @@ function displayRestrictions($recipeID, $cookUsername)
 
    if (mysqli_num_rows($result) > 0) {
       while ($row = $result->fetch_assoc()) {
-         $dietaryRestrictions .= " | " . $row["restriction"];
+         if ($row["restriction"]) {
+            $dietaryRestrictions .= " | " . $row["restriction"];
+         } else {
+            $dietaryRestrictions .= "N/A";
+         }
       }
       mysqli_free_result($query);
    } else {
