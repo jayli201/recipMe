@@ -20,7 +20,7 @@
     <br />
     <div class="welcome">
         <h1 class="display-1"><strong class="welcome-text">
-                RecipMe
+            <marquee scrollamount=11 direction=side hspace=30% behavior=slide>RecipMe</marquee>
             </strong></h1>
         <h2> <small class="text-muted">Where anyone can submit their own recipes and explore new recipes</small>
         </h2>
