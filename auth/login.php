@@ -62,7 +62,7 @@ if (isset($_POST['login'])) {
          <div style="color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
          <br>
          <div>
-            <button class="btn btn-success" type="submit" value="Login" name="login" id="login">Login</button>
+            <input type="submit" value="Login" name="login" id="login" />
          </div>
       </div>
    </form>

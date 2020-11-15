@@ -53,7 +53,7 @@ if (isset($_POST['action'])) {
       <div style="color:#cc0000; text-align:left; margin-top:10px; margin-bottom:10px"><?php echo $error; ?></div>
       <br>
       <div>
-         <button type="submit" class="btn btn-success" value="Sign Up" id="action" name="action">Sign Up</button>
+         <input type="submit" class="btn btn-success" value="Sign Up" id="action" name="action" />
       </div>
    </form>
    <?php include('../footer.html') ?>
