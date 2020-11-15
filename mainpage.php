@@ -37,8 +37,12 @@ if (isset($_POST['attempted'])) {
    }
 }
 
+// search for specific recipes
+if (isset($_POST['submit'])) {
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipeName LIKE '%" . $_POST['search'] . "%'";
+}
 // sort by recipe popularity
-if (isset($_POST['up_and_coming'])) {
+elseif (isset($_POST['up_and_coming'])) {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 0 AND 10";
 } elseif (isset($_POST['rising_star'])) {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 11 AND 20";
@@ -75,6 +79,13 @@ if (isset($_POST['up_and_coming'])) {
    <div>
       <br>
       <h1 class="display-4" style="color: #5cb85c;"><strong>All Recipes</strong></h1>
+      <br />
+      <form action='' method='post'>
+         <div>
+            <input type="text" name="search" placeholder='Look up specific recipes' required />
+            <input type="submit" value="Search" name="submit" />
+         </div>
+      </form>
       <br />
       <form action='' method='post'>
          <div class='form-group'>
