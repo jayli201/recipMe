@@ -55,6 +55,7 @@ if (isset($_POST['logout'])) {
     <?php displayReviews($recipeID, $cookID); ?>
     <br>
     <br>
+    <?php include('scroll.php') ?>
   </div>
 
   <?php include('footer.html') ?>

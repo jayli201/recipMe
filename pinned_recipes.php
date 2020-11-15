@@ -82,6 +82,7 @@ if (isset($_POST['attempted_filter'])) {
       <br>
       <p><?php displayPinnedRecipes($query) ?></p>
       <br />
+      <?php include('scroll.php') ?>
    </div>
 
    <?php include('footer.html') ?>

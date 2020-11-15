@@ -91,6 +91,7 @@ if (isset($_POST['up_and_coming'])) {
       <p><?php displaySomeRecipe($query) ?></p>
       <br>
       <br>
+      <?php include('scroll.php') ?>
    </div>
 
    <?php include('footer.html') ?>

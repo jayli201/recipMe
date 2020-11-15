@@ -266,6 +266,7 @@ function displayUserInfo($username)
       <?php displayOwnReviews($_SESSION['uname']); ?>
 
    </div>
+   <?php include('scroll.php') ?>
 
    <br />
    <br />
