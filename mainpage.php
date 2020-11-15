@@ -79,6 +79,7 @@ elseif (isset($_POST['up_and_coming'])) {
    <div>
       <br>
       <h1 class="display-4" style="color: #5cb85c;"><strong>All Recipes</strong></h1>
+      <br />
       <form action='' method='post'>
          <div>
             <input type="text" name="search" placeholder='Look up specific recipes' required />
