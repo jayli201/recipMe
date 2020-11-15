@@ -39,7 +39,7 @@ if (isset($_POST['attempted'])) {
 
 // search for specific recipes
 if (isset($_POST['submit'])) {
-   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipeName LIKE '%" . $_POST['search'] . "%'";
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND (recipeName LIKE '%" . $_POST['search'] . "%' OR instructions LIKE '%" . $_POST['search'] . "%')";
 }
 // sort by recipe popularity
 elseif (isset($_POST['up_and_coming'])) {
