@@ -11,8 +11,20 @@ Throughout this pandemic, many people have taken up hobbies such as baking and c
 ## Getting Started
 1. ssh into your CS server. 
 2. Go to your public_html folder.
-3. Git clone our project using this link: https://github.com/rmzhou99/recipMe.git. You should now have a recipMe folder within your public_html folder.
-4. Within the root recipMe directory, create an environment.php file to connect to the CS server database, as shown in the environment-example.php file. 
+3. Clone the repo.
+```
+git clone https://github.com/rmzhou99/recipMe.git 
+```
+You should now have a recipMe folder within your public_html folder.
+
+4. Within the root recipMe directory, create an ```environment.php``` file to connect to the CS server database, as shown in the ```environment-example.php file```, or see example below. 
+```php
+<?php
+$_ENV['CS_USERNAME'] = 'XXXX';
+$_ENV['CS_PASSWORD'] = 'XXXX';
+$_ENV['CS_HOST'] = 'XXXX';
+$_ENV['CS_DBNAME'] = 'XXXX';
+```
 5. Now head to the url: http://cs.virginia.edu/~yourComputingID/recipMe/auth/welcome.php.
     1. You should see a welcome page with a login and signup option in the top right corner. You have the option to sign up as either a cook or a foodie. 
 6. After creating an account and logging in, you should be able to see the home page with all of the recipes. 
