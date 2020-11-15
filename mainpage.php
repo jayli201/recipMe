@@ -39,11 +39,10 @@ if (isset($_POST['attempted'])) {
 
 // search for specific recipes
 if (isset($_POST['submit'])) {
-   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipeName LIKE ' % ". $_POST['search'] . " %'"; 
+   $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipeName LIKE '%" . $_POST['search'] . "%'";
 }
-
 // sort by recipe popularity
-if (isset($_POST['up_and_coming'])) {
+elseif (isset($_POST['up_and_coming'])) {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 0 AND 10";
 } elseif (isset($_POST['rising_star'])) {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipePinCount BETWEEN 11 AND 20";
