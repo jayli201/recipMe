@@ -55,7 +55,10 @@ if (isset($_POST['action'])) {
       <div>
          <input type="submit" class="btn btn-success" value="Sign Up" id="action" name="action" />
       </div>
+      <br>
    </form>
+   <br><br>
+
    <?php include('../footer.html') ?>
 </body>
 
