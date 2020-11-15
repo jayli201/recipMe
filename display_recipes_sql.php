@@ -124,6 +124,8 @@ function displayExcludedRecipe($recipeID, $cookUsername)
          }
       }
       mysqli_free_result($query);
+   } else {
+      echo "<h2> Sorry, there are currently no pinned recipes! </h2>";
    }
    return $result;
 }
@@ -194,24 +196,6 @@ function displayPinnedRecipes($query)
       mysqli_free_result($query);
    } else {
       echo "<h2> You haven't pinned any recipes yet! </h2> <br>";
-   }
-   return $result;
-}
-
-// displays all recipes on site, excluding ones submitted by the user
-function displaySuggestedRecipes($username)
-{
-   global $db;
-   $query = "SELECT * FROM recipes WHERE username != '" . $username . "'";
-   $result = mysqli_query($db, $query);
-
-   if (mysqli_num_rows($result) > 0) {
-      while ($row = $result->fetch_assoc()) {
-         displaySomeRecipe($row['recipeID'], $row['username']);
-      }
-      mysqli_free_result($query);
-   } else {
-      echo "There are no recipes available to see.";
    }
    return $result;
 }

@@ -33,9 +33,9 @@ if (isset($_POST['attempted'])) {
 }
 
 // sort by recipe attempted
-if (isset($_POST['attempted'])) {
+if (isset($_POST['attempted_filter'])) {
    $query = "SELECT * FROM pin WHERE username = '" . $_SESSION['uname'] . "' AND attempted = 1";
-} elseif (isset($_POST['not_attempted'])) {
+} elseif (isset($_POST['not_attempted_filter'])) {
    $query = "SELECT * FROM pin WHERE username = '" . $_SESSION['uname'] . "' AND attempted = 0";
 } else {
    $query = "SELECT * FROM pin WHERE username = '" . $_SESSION['uname'] . "'";
@@ -73,8 +73,8 @@ if (isset($_POST['attempted'])) {
          <div class='form-group'>
             <h3>Filter by which recipes you've tried:</h3>
             <div class='btn-group' style='width: 100%;'>
-               <button class="btn btn-success" type='submit' name='attempted'>Have tried!</button>
-               <button class="btn btn-success" type='submit' name='not_attempted'>Have not tried</button>
+               <button class="btn btn-success" type='submit' name='attempted_filter'>Have tried!</button>
+               <button class="btn btn-success" type='submit' name='not_attempted_filter'>Have not tried</button>
             </div>
             <button class="btn btn-danger" id='delete' type='submit' name='reset'>Reset</button>
          </div>
