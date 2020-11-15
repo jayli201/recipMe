@@ -1,9 +1,4 @@
 <?php
-$_ENV['LOCAL_USERNAME'] = 'XXXX';
-$_ENV['LOCAL_PASSWORD'] = 'XXXX';
-$_ENV['LOCAL_HOST'] = 'XXXX';
-$_ENV['LOCAL_DBNAME'] = 'XXXX';
-
 $_ENV['CS_USERNAME'] = 'XXXX';
 $_ENV['CS_PASSWORD'] = 'XXXX';
 $_ENV['CS_HOST'] = 'XXXX';
