@@ -38,7 +38,7 @@ if (isset($_POST['attempted'])) {
 }
 
 // search for specific recipes
-if (isset($_POST['submit'])) {
+if (isset($_POST['search'])) {
    $query = "SELECT * FROM recipes WHERE username != '" . $_SESSION['uname'] . "' AND recipeName LIKE ' % ". $_POST['search'] . " %'"; 
 }
 
@@ -80,6 +80,7 @@ if (isset($_POST['up_and_coming'])) {
    <div>
       <br>
       <h1 class="display-4" style="color: #5cb85c;"><strong>All Recipes</strong></h1>
+      <br />
       <form action='' method='post'>
          <div>
             <input type="text" name="search" placeholder='Look up specific recipes' required />
