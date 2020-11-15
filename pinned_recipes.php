@@ -34,8 +34,7 @@ if (isset($_POST['attempted'])) {
 
 // search for specific recipes
 if (isset($_POST['submit'])) {
-   $query = "SELECT * FROM pin p JOIN recipes r on p.cookUsername = r.username WHERE p.username = '" . $_SESSION['uname'] . "' AND r.recipeName LIKE '%" . $_POST['search'] . "%'";
-   echo $query;
+   $query = "SELECT * FROM pin p JOIN recipes r ON p.cookUsername = r.username AND p.recipeID = r.recipeID WHERE p.username = '" . $_SESSION['uname'] . "' AND r.recipeName LIKE '%" . $_POST['search'] . "%'";
 }
 // sort by recipe attempted
 elseif (isset($_POST['attempted_filter'])) {
@@ -73,6 +72,7 @@ elseif (isset($_POST['attempted_filter'])) {
    <div>
       <br />
       <h1 class="display-4" style="color: #5cb85c;"><strong>Your Pinned Recipes</strong></h1>
+      <br>
       <form action='' method='post'>
          <div>
             <input type="text" name="search" placeholder='Look up specific recipes' required />

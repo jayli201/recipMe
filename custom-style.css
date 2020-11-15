@@ -6,6 +6,10 @@
     color: #5cb85c;
 }
 
+.welcome-text {
+    text-shadow: -5px 5px 0px#197419; 
+}
+
 .copyright {
     color: black;
     float: left;
