@@ -13,11 +13,9 @@ Throughout this pandemic, many people have taken up hobbies such as baking and c
 2. Go to your public_html folder.
 3. Clone the repo.
 ```
-git clone https://github.com/rmzhou99/recipMe.git 
+git clone https://github.com/rmzhou99/recipMe.git
 ```
-You should now have a recipMe folder within your public_html folder.
-
-4. Within the root recipMe directory, create an ```environment.php``` file to connect to the CS server database, as shown in the ```environment-example.php file```, or see example below. 
+4. You should now have a recipMe folder within your public_html folder. Within the root recipMe directory, create an ```environment.php``` file to connect to the CS server database, as shown in the ```environment-example.php file```, or see example below. 
 ```php
 <?php
 $_ENV['CS_USERNAME'] = 'XXXX';
