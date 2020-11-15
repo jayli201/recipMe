@@ -117,7 +117,7 @@ function displayOwnReviews($username)
                echo '
                <div class="card" style="width: 60%; border-color: #5cb85c">
                   <div class="card-body" style="width: 100%;">
-                     <h4 class="card-subtitle mb-2 text-muted">Review for: ' . $cookUsername . '\'s ' . $recipeName  . '</h4>
+                     <h4 class="card-subtitle mb-2 text-muted">Review for ' . $cookUsername . '\'s ' . $recipeName  . '</h4>
                      ' . $review . '<br>
                   </div>
                </div>

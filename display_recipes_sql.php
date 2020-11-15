@@ -43,13 +43,6 @@ function createRecipeCard($row, $recipeID, $cookUsername)
       ';
 }
 
-// tried adding this instead of href, doesn't work
-// <form action="reviews.php?recipeID=' . $recipeID . '&cookID=' . $cookUsername . '">
-//    <div class="form-group">
-//    <form action=""><input type="submit" value="Click to see reviews" /></form>
-//    </div>
-// </form>
-
 // given a recipeID and the cook's username, display a recipe
 function displayRecipe($recipeID, $cookUsername)
 {

@@ -7,7 +7,7 @@ function findRecipeName($recipeID)
 
   global $db;
   $query =
-    "SELECT * FROM reviews, recipes WHERE reviews.recipeID = recipes.recipeID AND recipes.recipeID = '" . $recipeID . "'";
+    "SELECT * FROM recipes WHERE recipes.recipeID = '" . $recipeID . "'";
 
   // "SELECT * FROM cookPinCount, users WHERE cookPinCount.username = users.username AND cookPinCount.username = '" . $username . "'";
   $result = mysqli_query($db, $query);
@@ -16,8 +16,6 @@ function findRecipeName($recipeID)
       $recipeName = $row['recipeName'];
     }
     mysqli_free_result($result);
-  } else {
-    echo "0 results from findRecipeName()";
   }
   return $recipeName;
 }
@@ -47,7 +45,7 @@ function displayReviews($recipeID, $cookUsername)
     }
     mysqli_free_result($query);
   } else {
-    echo "There are currently no reviews for this recipe!";
+    echo "<em>There are currently no reviews for this recipe!</em>";
   }
   return $result;
 }
